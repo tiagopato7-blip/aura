@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AURA | Conócenos</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .glass-card-side {
+            position: absolute;
+            top: 50%;
+            width: 28vw;
+            max-width: 400px;
+            min-width: 250px;
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 30px;
+            padding: 1.5rem;
+            box-shadow: 0 35px 60px rgba(0, 0, 0, 0.15), 0 15px 25px rgba(0, 0, 0, 0.1);
+            z-index: 3;
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .glass-card-side:hover {
+            box-shadow: 0 45px 80px rgba(0, 0, 0, 0.2), 0 20px 30px rgba(0, 0, 0, 0.12);
+        }
+        .glass-card-side img {
+            width: 100%;
+            border-radius: 20px;
+            object-fit: cover;
+            aspect-ratio: 3/4;
+            transition: transform 0.5s ease;
+        }
+        .glass-card-side:hover img {
+            transform: scale(1.03);
+        }
+        .glass-card-left {
+            left: 2vw;
+            animation: floatLeft 7s ease-in-out infinite;
+        }
+        .glass-card-right {
+            right: 2vw;
+            animation: floatRight 8s ease-in-out infinite;
+        }
+        @keyframes floatLeft {
+            0%, 100% { transform: translateY(-50%) rotate(-3deg); }
+            50% { transform: translateY(calc(-50% - 25px)) rotate(-1deg); }
+        }
+        @keyframes floatRight {
+            0%, 100% { transform: translateY(-50%) rotate(3deg); }
+            50% { transform: translateY(calc(-50% - 25px)) rotate(1deg); }
+        }
+        @media(max-width: 1300px) {
+            .glass-card-side {
+                width: 25vw;
+                padding: 1rem;
+            }
+        }
+        @media(max-width: 992px) {
+            .glass-card-side {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="cursor-blob"></div>
+    <div class="app-container" style="min-height: 100vh; display: flex; flex-direction: column; justify-content: center; position: relative;">
+        
+        <!-- Back to Home Button -->
+        <a href="index.html" style="position: absolute; top: 40px; left: 5vw; z-index: 100; display: inline-flex; align-items: center; gap: 0.8rem; text-decoration: none; padding: 0.9rem 1.8rem; background: var(--color-pink); color: var(--color-text-inverse); border-radius: 50px; font-family: var(--font-sans); font-weight: 600; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.1em; transition: all 0.3s var(--bezier); box-shadow: 0 10px 25px rgba(0,0,0,0.1);">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            Volver a inicio
+        </a>
+
+        <!-- MODULE 1.5: Conócenos -->
+        <section id="conocenos" class="panel center reveal-grand active" style="min-height: auto; padding: 8rem 5vw; position: relative; overflow: hidden; margin-top: 5rem;">
+            <!-- Aesthetic Corner Accents -->
+            <div class="aura-corner-indicator top-right light">
+                <span>✧ ABOUT</span>
+                <div class="colors-line"></div>
+            </div>
+            <!-- Decoraciones de fondo -->
+            <div style="position: absolute; width: 40vw; height: 40vw; border-radius: 50%; background: radial-gradient(circle, rgba(248, 209, 211, 0.5) 0%, transparent 70%); top: -10%; left: -10%; z-index: 0; filter: blur(40px);"></div>
+            <div style="position: absolute; width: 35vw; height: 35vw; border-radius: 50%; background: radial-gradient(circle, rgba(220, 235, 208, 0.4) 0%, transparent 70%); bottom: -10%; right: -10%; z-index: 0; filter: blur(40px);"></div>
+            
+            <!-- Glass Cards -->
+            <div class="glass-card-side glass-card-left reveal-item active">
+                <img src="fabi.jpg" alt="Fabi">
+            </div>
+            
+            <div class="glass-card-side glass-card-right reveal-item active">
+                <img src="vero.jpg" alt="Vero">
+            </div>
+
+            <div class="conocenos-container" style="max-width: 800px; margin: 0 auto; text-align: center; position: relative; z-index: 2;">
+                <div class="border-pill reveal-item active" style="margin: 0 auto 2rem; color: var(--color-text-main); border-color: var(--color-text-muted);">Nuestra Historia</div>
+                <h2 class="reveal-item active" style="font-size: 4rem; color: var(--color-text-main); margin-bottom: 2rem;">Conócenos.</h2>
+                
+                <div class="reveal-item active" style="display: flex; flex-direction: column; gap: 1.5rem; color: var(--color-text-muted); font-size: 1.2rem; line-height: 1.8; text-align: justify; text-align-last: center;">
+                    <p>
+                        <strong style="font-size: 1.3rem; color: var(--color-text-main); font-weight: 500;">Bienvenidos a nuestro espacio</strong>, un lugar diferente en Burgos donde la belleza y el café se unen para crear una experiencia única.
+                    </p>
+                    <p>
+                        Este proyecto nace de la ilusión de <strong>Vero y Fabi</strong>, familia dentro y fuera del negocio, y de las ganas de juntar dos cosas que siempre nos han apasionado: el cuidado personal y esos pequeños momentos que se disfrutan alrededor de una buena taza de café.
+                    </p>
+                    <p>
+                        Queríamos crear algo más que un salón de uñas o una cafetería. Soñábamos con un espacio acogedor, bonito y cercano, donde cada persona pudiera venir a relajarse, desconectar de la rutina y dedicarse un rato para sí misma. Un lugar donde sentirse cómoda, compartir, cuidarse y disfrutar sin prisas.
+                    </p>
+                    <p>
+                        Cada detalle de este rincón está pensado con muchísimo cariño para que te sientas como en casa. Porque para nosotras, lo más importante no es solo ofrecer un servicio, sino crear una experiencia especial y un ambiente lleno de buena energía.
+                    </p>
+                </div>
+
+                <p class="reveal-item active" style="color: var(--color-text-main); font-size: 1.8rem; font-family: var(--font-serif); font-style: italic; margin-top: 4rem;">
+                    Gracias por acompañarnos en esta aventura y formar parte de este sueño hecho realidad ✦
+                </p>
+            </div>
+        </section>
+
+    </div>
+    
+    <script>
+        // Custom Cursor Logic
+        const cursor = document.querySelector('.cursor-blob');
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
+
+        const interactives = document.querySelectorAll('button, a');
+        interactives.forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                cursor.style.transform = 'translate(-50%, -50%) scale(1.5)';
+                cursor.style.backgroundColor = 'var(--color-matcha)';
+            });
+            el.addEventListener('mouseleave', () => {
+                cursor.style.transform = 'translate(-50%, -50%) scale(1)';
+                cursor.style.backgroundColor = 'var(--color-pink)';
+            });
+        });
+    </script>
+</body>
+</html>

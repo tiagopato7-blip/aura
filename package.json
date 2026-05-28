@@ -1,0 +1,11 @@
+{
+  "name": "aura-coffee-nails-workspace",
+  "version": "1.0.0",
+  "description": "AURA | Coffee & Nails - Modern aesthetic website",
+  "scripts": {
+    "dev": "npx http-server ./cafe -o /aura-coffee-nails/"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
