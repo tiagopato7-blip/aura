@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "AURA | Coffee & Nails - Modern aesthetic website",
   "scripts": {
-    "dev": "npx http-server ./cafe -o /aura-coffee-nails/"
+    "dev": "npx http-server ./cafe -o /aura-coffee-nails/",
+    "build": "echo 'No build step required'"
   },
   "keywords": [],
   "author": "",

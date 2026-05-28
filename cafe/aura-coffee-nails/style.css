@@ -2240,7 +2240,7 @@ canvas {
 }
 
 .expandable-item.open .services-dropdown {
-    max-height: 300px;
+    max-height: 800px; /* Increased to accommodate the full list of 11 services */
     margin-top: 1.5rem;
     opacity: 1;
 }
