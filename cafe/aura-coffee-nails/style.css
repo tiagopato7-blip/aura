@@ -2795,11 +2795,11 @@ canvas {
     
     .cafe-frames-wrapper {
         width: 100% !important;
-        max-width: 350px !important;
+        max-width: 220px !important; /* Reduced from 350px to make it smaller */
         margin: 0 auto !important;
         position: sticky !important;
-        top: 10vh !important;
-        height: 75vh !important;
+        top: 25vh !important; /* Centered vertically */
+        height: 50vh !important; /* Reduced height */
         display: flex;
         justify-content: center;
         align-items: center;
