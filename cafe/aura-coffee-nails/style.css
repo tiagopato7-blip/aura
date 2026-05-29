@@ -2870,6 +2870,31 @@ canvas {
         display: none !important; /* Hide aesthetic text corners on mobile to save space and reduce clutter */
     }
     
+    /* Footer Restructure */
+    .footer-info {
+        padding: 0 1.5rem !important;
+    }
+    .socials {
+        flex-direction: column !important;
+        gap: 1rem !important;
+        align-items: center !important;
+        width: 100% !important;
+    }
+    .socials a {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: 100% !important;
+        max-width: 320px !important;
+        padding: 1.2rem !important;
+        background: rgba(255, 255, 255, 0.05) !important;
+        border: 1px solid rgba(255, 255, 255, 0.15) !important;
+        border-radius: 30px !important;
+        font-size: 1.1rem !important;
+        letter-spacing: 0.05em !important;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.05) !important;
+    }
+    
     /* ========================================= */
     /* TOTAL SCROLL LOCK REMOVAL FOR MOBILE      */
     /* Force fluid scrolling across all sections */
