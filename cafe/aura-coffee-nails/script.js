@@ -374,28 +374,33 @@ if (contactBtn && contactModal && closeContactBtn) {
         ctx.drawImage(img, x, y, w, h);
     }
 
-    let currentFrame = 0;
-    let lastTime = 0;
-    const fps = 30;
-    const interval = 1000 / fps;
+    let targetFrame = 0;
+    let smoothedFrame = 0;
 
-    function cafeLoop(time) {
-        requestAnimationFrame(cafeLoop);
-        
+    window.scrollCallbacks.push(() => {
+        let progress = 0;
         if(wrapper) {
             const rect = wrapper.getBoundingClientRect();
-            // Only play if visible in viewport
-            if(rect.bottom < 0 || rect.top > window.innerHeight) return;
+            // Calculate progress based on the wrapper entering the bottom and leaving the top
+            const total = window.innerHeight + rect.height;
+            const scrolled = window.innerHeight - rect.top;
+            if (total > 0 && scrolled > 0) progress = scrolled / total;
         }
+        
+        if (isNaN(progress)) progress = 0;
+        progress = Math.max(0, Math.min(1, progress));
+        targetFrame = progress * (totalFrames - 1);
+    });
 
-        if (time - lastTime >= interval) {
-            lastTime = time;
-            currentFrame = (currentFrame + 1) % totalFrames;
-            drawFrame(currentFrame);
-        }
+    function cafeLoop() {
+        requestAnimationFrame(cafeLoop);
+        if (isNaN(targetFrame)) targetFrame = 0;
+        smoothedFrame += (targetFrame - smoothedFrame) * 0.15; // smooth transition
+        const frameIndex = Math.min(totalFrames - 1, Math.max(0, Math.round(smoothedFrame)));
+        drawFrame(frameIndex);
     }
 
-    requestAnimationFrame(cafeLoop);
+    cafeLoop();
 })();
 
 // Extended Colors Modal Logic
