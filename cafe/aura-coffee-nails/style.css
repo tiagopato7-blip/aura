@@ -2631,6 +2631,12 @@ canvas {
     width: 100%;
     aspect-ratio: 16 / 9;
     overflow: hidden;
+    -webkit-mask-image: linear-gradient(to bottom, black 70%, transparent 100%), 
+                        linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%);
+    -webkit-mask-composite: source-in;
+    mask-image: linear-gradient(to bottom, black 70%, transparent 100%), 
+                linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%);
+    mask-composite: intersect;
 }
 
 #girl-video-canvas {
