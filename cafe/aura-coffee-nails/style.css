@@ -1028,8 +1028,18 @@ canvas {
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
 }
 
+.ig-item:nth-child(odd) {
+    transform: translateY(-25px);
+}
+
 .ig-item:hover {
     transform: scale(1.05) translateY(-15px);
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.ig-item:nth-child(odd):hover {
+    transform: scale(1.05) translateY(-40px);
     box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
     background: rgba(255, 255, 255, 0.05);
 }
