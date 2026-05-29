@@ -36,6 +36,9 @@
 html, body {
     margin: 0;
     padding: 0;
+    height: auto;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 body {
@@ -2612,7 +2615,9 @@ canvas {
     html, body {
         width: auto !important;
         max-width: none !important;
-        overflow-x: visible !important;
+        height: auto !important;
+        overflow-x: hidden !important;
+        overflow-y: auto !important;
     }
     .app-container {
         overflow-x: hidden !important;
@@ -2690,6 +2695,7 @@ canvas {
     /* Interactive Nails & Colors */
     .panel {
         padding: 4rem 1rem !important;
+        min-height: auto !important;
     }
     #interactive-nails {
         padding-top: 6rem !important;
