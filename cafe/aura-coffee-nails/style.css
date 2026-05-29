@@ -2869,6 +2869,30 @@ canvas {
     .aura-corner-indicator {
         display: none !important; /* Hide aesthetic text corners on mobile to save space and reduce clutter */
     }
+    
+    /* ========================================= */
+    /* TOTAL SCROLL LOCK REMOVAL FOR MOBILE      */
+    /* Force fluid scrolling across all sections */
+    /* ========================================= */
+    .sticky-hero,
+    .horizontal-sticky,
+    .scroll-video-sticky,
+    .cafe-frames-wrapper,
+    .nails-sticky {
+        position: relative !important;
+        top: auto !important;
+        bottom: auto !important;
+    }
+    
+    #hero-spacer,
+    #horizontal-spacer,
+    .scroll-video-container,
+    .cafe-panel,
+    #hero,
+    #interactive-nails {
+        height: auto !important;
+        min-height: 0 !important;
+    }
 }
 
 /* Mobile Warning Overlay */
