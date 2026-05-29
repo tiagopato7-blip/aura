@@ -36,8 +36,6 @@
 html, body {
     margin: 0;
     padding: 0;
-    overflow-x: hidden;
-    -webkit-overflow-scrolling: touch;
 }
 
 body {
@@ -189,12 +187,54 @@ body:hover .cursor-blob {
 .app-container {
     position: relative;
     width: 100%;
+    overflow-x: hidden;
     display: flex;
     flex-direction: column;
     z-index: 5;
     min-height: 100dvh;
 }
 
+/* Ticker Tape / Marquee */
+.ticker-wrap {
+    width: 100%;
+    overflow: hidden;
+    background: var(--color-pink);
+    /* Update background to user color */
+    border-bottom: none;
+    padding: 12px 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 200;
+}
+
+.ticker {
+    display: inline-block;
+    white-space: nowrap;
+    animation: ticker 40s linear infinite;
+    color: #4A3628;
+    /* Harmonious chestnut / espresso brown */
+    font-family: var(--font-sans);
+    font-size: 0.9rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 500;
+}
+
+.ticker__item {
+    display: inline-block;
+    padding: 0 2rem;
+}
+
+@keyframes ticker {
+    0% {
+        transform: translate3d(0, 0, 0);
+    }
+
+    100% {
+        transform: translate3d(-50%, 0, 0);
+    }
+}
 
 /* Pinned Hero Section */
 #hero-spacer {
@@ -1634,7 +1674,7 @@ canvas {
 }
 .main-header {
     position: fixed;
-    top: 20px; /* Floats perfectly at top */
+    top: 60px; /* Floats perfectly below the top ticker wrap */
     left: 0;
     width: 100%;
     padding: 0 5vw;
@@ -1758,7 +1798,7 @@ canvas {
 /* Responsive capsule adjustments for tablet/mobile */
 @media(max-width: 768px) {
     .main-header {
-        top: 20px !important; /* Fixed capsule near top on mobile */
+        top: 60px !important; /* Keep floating static relative below mobile ticker wrap */
         padding: 0 3vw;
     }
     
@@ -2570,13 +2610,13 @@ canvas {
     }
     /* Global Resets */
     html, body {
-        overflow-x: hidden;
-        width: 100vw !important;
-        max-width: 100% !important;
+        width: auto !important;
+        max-width: none !important;
+        overflow-x: visible !important;
     }
     .app-container {
         overflow-x: hidden !important;
-        width: 100vw !important;
+        width: 100% !important;
         max-width: 100% !important;
     }
     
