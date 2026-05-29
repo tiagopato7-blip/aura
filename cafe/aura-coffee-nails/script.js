@@ -326,15 +326,14 @@ if (contactBtn && contactModal && closeContactBtn) {
     if (!canvas || !spacer) return;
 
     const ctx = canvas.getContext('2d');
-    const totalFrames = 183; 
+    const totalFrames = 240; 
     const frames = [];
     let loadedCount = 0;
     let lastFrameIndex = -1;
 
-    for (let i = 0; i < totalFrames; i++) {
+    for (let i = 1; i <= totalFrames; i++) {
         const img = new Image();
-        const frameNum = i + 28;
-        const num = String(frameNum).padStart(3, '0');
+        const num = String(i).padStart(3, '0');
         img.src = `987/ezgif-frame-${num}.jpg`;
         img.onload = () => {
             loadedCount++;
