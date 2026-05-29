@@ -449,8 +449,8 @@ canvas {
 .cafe-frames-wrapper {
     position: relative;
     width: 100%;
-    max-width: 240px;
-    aspect-ratio: 9 / 16;
+    max-width: 340px;
+    aspect-ratio: 4 / 5;
     border-radius: 30px;
     overflow: hidden;
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
@@ -2952,9 +2952,9 @@ canvas {
 
     .cafe-frames-wrapper {
         width: 100% !important;
-        max-width: 240px !important;
+        max-width: 340px !important;
         margin: 0 auto !important;
-        aspect-ratio: 9 / 16 !important;
+        aspect-ratio: 4 / 5 !important;
     }
 
     .content-block,
