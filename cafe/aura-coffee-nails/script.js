@@ -79,9 +79,34 @@ updateCachedDimensions();
 window.addEventListener('resize', updateCachedDimensions);
 window.addEventListener('load', updateCachedDimensions);
 
-window.addEventListener('scroll', () => {
-    const scrollY = window.scrollY;
+// Throttled Unified Scroll Manager (Only 1 passive scroll listener throttled with rAF)
+window.scrollCallbacks = [];
+let scrollTicking = false;
 
+function handleScroll() {
+    const scrollY = window.scrollY;
+    // Execute all registered scroll callbacks
+    window.scrollCallbacks.forEach(callback => {
+        try {
+            callback(scrollY);
+        } catch (e) {
+            console.error("Scroll callback error:", e);
+        }
+    });
+}
+
+window.addEventListener('scroll', () => {
+    if (!scrollTicking) {
+        window.requestAnimationFrame(() => {
+            handleScroll();
+            scrollTicking = false;
+        });
+        scrollTicking = true;
+    }
+}, { passive: true });
+
+// Register horizontal spacer and mobile cafe animation scroll progress update callbacks
+window.scrollCallbacks.push((scrollY) => {
     // Horizontal Scroll Section (Desktop Only)
     if (window.innerWidth > 768) {
         const scrollTrigger = horizSpacerOffsetTop - scrollY; 
@@ -105,7 +130,7 @@ window.addEventListener('scroll', () => {
             }
         }
     }
-}, { passive: true });
+});
 
 // Animation Loop (Lerp)
 function animLoop() {
@@ -351,15 +376,15 @@ if (contactBtn && contactModal && closeContactBtn) {
     if (!header) return;
 
     let lastScrollY = window.scrollY;
-    window.addEventListener('scroll', () => {
+    window.scrollCallbacks.push((scrollY) => {
         // Only run scroll effect on desktop screens (larger than 768px)
         // Mobile layout keeps header completely static to prevent style dirtying and lag
         if (window.innerWidth <= 768) {
             return;
         }
 
-        if (window.scrollY > 120) {
-            if (window.scrollY > lastScrollY) {
+        if (scrollY > 120) {
+            if (scrollY > lastScrollY) {
                 // Scrolling down: slide up and hide
                 header.style.transform = 'translateY(-150%)';
                 header.style.opacity = '0';
@@ -375,8 +400,8 @@ if (contactBtn && contactModal && closeContactBtn) {
             header.style.opacity = '1';
             header.style.top = '60px';
         }
-        lastScrollY = window.scrollY;
-    }, { passive: true });
+        lastScrollY = scrollY;
+    });
 })();
 
 
@@ -776,8 +801,7 @@ if (contactBtn && contactModal && closeContactBtn) {
     }, { threshold: 0.01 });
     videoObserver.observe(canvas);
 
-    window.addEventListener('scroll', () => {
-        const scrollY = window.scrollY;
+    window.scrollCallbacks.push((scrollY) => {
         const rectTop = scrollVideoOffsetTop - scrollY;
 
         let progress;
@@ -793,7 +817,7 @@ if (contactBtn && contactModal && closeContactBtn) {
         progress = Math.max(0, Math.min(1, progress));
 
         targetFrame = progress * (frameCount - 1);
-    }, { passive: true });
+    });
 
     function loop() {
         requestAnimationFrame(loop);
