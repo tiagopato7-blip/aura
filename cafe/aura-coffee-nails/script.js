@@ -79,58 +79,58 @@ updateCachedDimensions();
 window.addEventListener('resize', updateCachedDimensions);
 window.addEventListener('load', updateCachedDimensions);
 
-// ============================================================
-// UNIFIED SCROLL ENGINE
-// Rule: scroll → ONLY store value | rAF → animate everything
-// ============================================================
-let currentScrollY = 0;
+// Throttled Unified Scroll Manager (Only 1 passive scroll listener throttled with rAF)
+window.scrollCallbacks = [];
 let scrollTicking = false;
 
-// forward-declare so IIFEs below can assign their logic
-let updateNavbar = (_scrollY) => {};
-let updateVideo  = (_scrollY) => {};
+function handleScroll() {
+    const scrollY = window.scrollY;
+    // Execute all registered scroll callbacks
+    window.scrollCallbacks.forEach(callback => {
+        try {
+            callback(scrollY);
+        } catch (e) {
+            console.error("Scroll callback error:", e);
+        }
+    });
+}
 
 window.addEventListener('scroll', () => {
-    currentScrollY = window.scrollY;   // ← ONLY this. Nothing else.
-
     if (!scrollTicking) {
-        requestAnimationFrame(() => {
-            updateAllScrollAnimations(currentScrollY);
+        window.requestAnimationFrame(() => {
+            handleScroll();
             scrollTicking = false;
         });
         scrollTicking = true;
     }
 }, { passive: true });
 
-function updateHorizontal(scrollY) {
+// Register horizontal spacer and mobile cafe animation scroll progress update callbacks
+window.scrollCallbacks.push((scrollY) => {
+    // Horizontal Scroll Section (Desktop Only)
     if (window.innerWidth > 768) {
-        const scrollTrigger = horizSpacerOffsetTop - scrollY;
+        const scrollTrigger = horizSpacerOffsetTop - scrollY; 
         const horizMaxScroll = horizSpacerHeight - window.innerHeight;
         if (horizMaxScroll > 0) {
-            const horizFraction = (-scrollTrigger) / horizMaxScroll;
-            horizTarget = Math.max(0, Math.min(1, horizFraction / 0.75));
+            let horizFraction = (-scrollTrigger) / horizMaxScroll;
+            let mappedFraction = horizFraction / 0.75;
+            horizTarget = Math.max(0, Math.min(1, mappedFraction));
         }
     }
-}
 
-function updateCafe(scrollY) {
-    if (window.innerWidth <= 768 && cafePanelHeight > 0) {
-        const prectTop = cafePanelOffsetTop - scrollY;
-        const startOffset = window.innerHeight * 1.35;
-        const totalScrollDistance = (window.innerHeight + cafePanelHeight) - startOffset;
-        if (totalScrollDistance > 0) {
-            const scrolled = window.innerHeight - prectTop - startOffset;
-            window.mobileCafeTargetProgress = Math.max(0, Math.min(1, (scrolled / totalScrollDistance) * 2.2));
+    // Calculate Cafe Animation Mobile Progress purely mathematically
+    if (window.innerWidth <= 768) {
+        if (cafePanelHeight > 0) {
+            const prectTop = cafePanelOffsetTop - scrollY;
+            const startOffset = window.innerHeight * 1.35;
+            const totalScrollDistance = (window.innerHeight + cafePanelHeight) - startOffset;
+            if (totalScrollDistance > 0) {
+                const scrolled = window.innerHeight - prectTop - startOffset;
+                window.mobileCafeTargetProgress = Math.max(0, Math.min(1, (scrolled / totalScrollDistance) * 2.2));
+            }
         }
     }
-}
-
-function updateAllScrollAnimations(scrollY) {
-    updateHorizontal(scrollY);
-    updateCafe(scrollY);
-    updateNavbar(scrollY);
-    updateVideo(scrollY);
-}
+});
 
 // Animation Loop (Lerp)
 function animLoop() {
@@ -375,29 +375,33 @@ if (contactBtn && contactModal && closeContactBtn) {
     const header = document.querySelector('.main-header');
     if (!header) return;
 
-    let lastScrollY = 0;
-
-    // Assign to the forward-declared stub — runs from updateAllScrollAnimations via rAF
-    updateNavbar = (scrollY) => {
-        // Desktop only: mobile header stays fixed to prevent style dirtying
-        if (window.innerWidth <= 768) return;
+    let lastScrollY = window.scrollY;
+    window.scrollCallbacks.push((scrollY) => {
+        // Only run scroll effect on desktop screens (larger than 768px)
+        // Mobile layout keeps header completely static to prevent style dirtying and lag
+        if (window.innerWidth <= 768) {
+            return;
+        }
 
         if (scrollY > 120) {
             if (scrollY > lastScrollY) {
+                // Scrolling down: slide up and hide
                 header.style.transform = 'translateY(-150%)';
                 header.style.opacity = '0';
             } else {
+                // Scrolling up: reveal fixed capsule closer to top
                 header.style.transform = 'translateY(0)';
                 header.style.opacity = '1';
                 header.style.top = '20px';
             }
         } else {
+            // Near top: return to original position below ticker wrap
             header.style.transform = 'translateY(0)';
             header.style.opacity = '1';
             header.style.top = '60px';
         }
         lastScrollY = scrollY;
-    };
+    });
 })();
 
 
@@ -797,19 +801,23 @@ if (contactBtn && contactModal && closeContactBtn) {
     }, { threshold: 0.01 });
     videoObserver.observe(canvas);
 
-    // Assign to the forward-declared stub — runs from updateAllScrollAnimations via rAF
-    updateVideo = (scrollY) => {
+    window.scrollCallbacks.push((scrollY) => {
         const rectTop = scrollVideoOffsetTop - scrollY;
 
         let progress;
         if (window.innerWidth <= 768) {
+            // Scroll normally, map animation to intersection
+            // Multiply by 1.5 for a middle-ground speed
             progress = ((window.innerHeight - rectTop) / (window.innerHeight + scrollVideoHeight)) * 1.5;
         } else {
+            // Sticky logic for desktop
             const scrollMax = scrollVideoHeight - window.innerHeight;
             progress = scrollMax > 0 ? -rectTop / scrollMax : 0;
         }
-        targetFrame = Math.max(0, Math.min(1, progress)) * (frameCount - 1);
-    };
+        progress = Math.max(0, Math.min(1, progress));
+
+        targetFrame = progress * (frameCount - 1);
+    });
 
     function loop() {
         requestAnimationFrame(loop);
