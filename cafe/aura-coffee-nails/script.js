@@ -38,47 +38,6 @@ svcBtns.forEach(btn => {
     });
 });
 
-// Complex Scroll Logic Management
-const horizSpacer = document.getElementById('horizontal-spacer');
-const horizContent = document.querySelector('.horizontal-content');
-
-let horizTarget = 0;
-let horizCurrent = 0;
-
-// High-Performance Cached Dimensions to prevent Layout Thrashing on Scroll
-let horizSpacerOffsetTop = 0;
-let horizSpacerHeight = 0;
-let cafePanelOffsetTop = 0;
-let cafePanelHeight = 0;
-let scrollVideoOffsetTop = 0;
-let scrollVideoHeight = 0;
-
-function updateCachedDimensions() {
-    const scrollY = window.scrollY;
-    
-    if (horizSpacer) {
-        horizSpacerOffsetTop = horizSpacer.getBoundingClientRect().top + scrollY;
-        horizSpacerHeight = horizSpacer.offsetHeight;
-    }
-    
-    const panel = document.querySelector('.cafe-panel');
-    if (panel) {
-        cafePanelOffsetTop = panel.getBoundingClientRect().top + scrollY;
-        cafePanelHeight = panel.offsetHeight;
-    }
-    
-    const videoSection = document.getElementById('scroll-video-section');
-    if (videoSection) {
-        scrollVideoOffsetTop = videoSection.getBoundingClientRect().top + scrollY;
-        scrollVideoHeight = videoSection.offsetHeight;
-    }
-}
-
-// Initial cache and event bindings
-updateCachedDimensions();
-window.addEventListener('resize', updateCachedDimensions);
-window.addEventListener('load', updateCachedDimensions);
-
 // Throttled Unified Scroll Manager (Only 1 passive scroll listener throttled with rAF)
 window.scrollCallbacks = [];
 let scrollTicking = false;
@@ -104,53 +63,6 @@ window.addEventListener('scroll', () => {
         scrollTicking = true;
     }
 }, { passive: true });
-
-// Register horizontal spacer and mobile cafe animation scroll progress update callbacks
-window.scrollCallbacks.push((scrollY) => {
-    // Horizontal Scroll Section (Desktop Only)
-    if (window.innerWidth > 768) {
-        const scrollTrigger = horizSpacerOffsetTop - scrollY; 
-        const horizMaxScroll = horizSpacerHeight - window.innerHeight;
-        if (horizMaxScroll > 0) {
-            let horizFraction = (-scrollTrigger) / horizMaxScroll;
-            let mappedFraction = horizFraction / 0.75;
-            horizTarget = Math.max(0, Math.min(1, mappedFraction));
-        }
-    }
-
-    // Calculate Cafe Animation Mobile Progress purely mathematically
-    if (window.innerWidth <= 768) {
-        if (cafePanelHeight > 0) {
-            const prectTop = cafePanelOffsetTop - scrollY;
-            const startOffset = window.innerHeight * 1.35;
-            const totalScrollDistance = (window.innerHeight + cafePanelHeight) - startOffset;
-            if (totalScrollDistance > 0) {
-                const scrolled = window.innerHeight - prectTop - startOffset;
-                window.mobileCafeTargetProgress = Math.max(0, Math.min(1, (scrolled / totalScrollDistance) * 2.2));
-            }
-        }
-    }
-});
-
-// Animation Loop (Lerp)
-function animLoop() {
-    // Only apply horizontal translation on desktop
-    if (window.innerWidth > 768) {
-        // Horizontal Smoothing
-        horizCurrent += (horizTarget - horizCurrent) * 0.2;
-        // Translate from 25vw to -75vw so each 50vw panel perfectly centers on the 100vw screen
-        const translateValue = 25 - (horizCurrent * 100);
-        horizContent.style.transform = `translateX(${translateValue}vw)`;
-    } else {
-        // On mobile, ensure it resets without constant applying
-        if (horizContent.style.transform !== 'none') {
-            horizContent.style.transform = 'none';
-        }
-    }
-
-    requestAnimationFrame(animLoop);
-}
-animLoop();
 
 
 // Interactive Color Selector Logic
@@ -469,12 +381,13 @@ if (contactBtn && contactModal && closeContactBtn) {
     let targetFrame = 0;
     let smoothedFrame = 0;
 
-    window.scrollCallbacks.push((scrollY) => {
+    window.scrollCallbacks.push(() => {
         let progress = 0;
-        if (window.innerWidth <= 768) {
-            progress = window.mobileCafeTargetProgress || 0;
-        } else {
-            progress = horizCurrent / 0.45;
+        if(panel) {
+            const rect = panel.getBoundingClientRect();
+            const total = window.innerHeight + rect.height;
+            const scrolled = window.innerHeight - rect.top;
+            if (total > 0 && scrolled > 0) progress = scrolled / total;
         }
         
         if (isNaN(progress)) progress = 0;
@@ -752,17 +665,17 @@ if (contactBtn && contactModal && closeContactBtn) {
     let targetFrame = 0;
     let smoothedFrame = 0;
 
-    window.scrollCallbacks.push((scrollY) => {
-        const rectTop = scrollVideoOffsetTop - scrollY;
+    window.scrollCallbacks.push(() => {
+        const rect = section.getBoundingClientRect();
         let progress = 0;
         
         if (window.innerWidth <= 768) {
-            const total = window.innerHeight + scrollVideoHeight;
-            const scrolled = window.innerHeight - rectTop;
+            const total = window.innerHeight + rect.height;
+            const scrolled = window.innerHeight - rect.top;
             if(total > 0 && scrolled > 0) progress = (scrolled / total) * 1.5;
         } else {
-            const scrollMax = scrollVideoHeight - window.innerHeight;
-            if(scrollMax > 0) progress = -rectTop / scrollMax;
+            const scrollMax = rect.height - window.innerHeight;
+            if(scrollMax > 0) progress = -rect.top / scrollMax;
         }
         
         if (isNaN(progress)) progress = 0;

@@ -394,62 +394,48 @@ canvas {
 
 
 
-/* HORIZONTAL SCROLL SECTION (MODULE 3) */
+/* HORIZONTAL SCROLL SECTION (MODULE 3) CONVERTED TO VERTICAL */
 #horizontal-spacer {
     width: 100%;
-    height: 400vh;
-    /* Increased to emphasize vertical scroll lock */
+    height: auto;
     position: relative;
     z-index: 10;
 }
 
 .horizontal-sticky {
-    position: sticky;
-    top: 0;
+    position: relative;
     width: 100%;
-    height: 100vh;
-    overflow: hidden;
+    height: auto;
+    overflow: visible;
     display: flex;
+    flex-direction: column;
     align-items: center;
 }
 
 .horizontal-content {
     display: flex;
-    flex-direction: row;
-    width: 150vw;
-    /* 3 panels x 50vw */
-    height: 100%;
-    will-change: transform;
+    flex-direction: column;
+    width: 100%;
+    height: auto;
+    gap: 4rem;
+    padding: 4rem 0;
 }
 
 .h-panel {
     position: relative;
-    width: 50vw;
-    /* Much closer together */
-    height: 100vh;
+    width: 100%;
+    min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 0 2vw;
-    /* Reduced padding */
-    animation: hPanelFloat 8s ease-in-out infinite;
+    padding: 0 5vw;
 }
 
 .h-panel:nth-child(even) {
     animation-delay: -4s;
 }
 
-@keyframes hPanelFloat {
 
-    0%,
-    100% {
-        transform: translateY(0);
-    }
-
-    50% {
-        transform: translateY(-15px);
-    }
-}
 
 /* Café Panel - Two-column layout */
 .cafe-panel {
