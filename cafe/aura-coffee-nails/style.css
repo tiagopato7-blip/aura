@@ -437,35 +437,20 @@ canvas {
 
 
 
-/* Café Panel - Sticky Scroll layout */
+/* Café Panel - Two-column layout */
 .cafe-panel {
-    position: relative;
-    width: 100vw !important;
-    max-width: 100% !important;
-    display: block !important;
-    height: 300vh !important; /* Forces a long scroll area */
-    padding: 0 !important;
-    margin: 0 !important;
-}
-
-.cafe-panel-content {
-    position: sticky;
-    top: 0;
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
+    width: 85vw;
+    /* Increased even more for massive impact */
     gap: 4vw;
+    justify-content: center;
 }
 
 /* Beautiful Glass-like Frame Animation Wrapper */
 .cafe-frames-wrapper {
     position: relative;
     width: 100%;
-    max-width: 320px;
-    aspect-ratio: 4 / 5;
+    max-width: 240px;
+    aspect-ratio: 9 / 16;
     border-radius: 30px;
     overflow: hidden;
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
@@ -1025,7 +1010,7 @@ canvas {
 
 .ig-feed {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 1.5rem;
     margin-bottom: 4rem;
     max-width: 1000px;
@@ -2946,28 +2931,18 @@ canvas {
 
     .cafe-panel {
         width: 100vw !important;
-        height: 300vh !important;
-        display: block !important;
-        padding: 0 !important;
-    }
-
-    .cafe-panel-content {
-        position: sticky !important;
-        top: 0 !important;
-        height: 100vh !important;
-        width: 100vw !important;
         display: flex !important;
         flex-direction: column !important;
         padding: 4rem 1.5rem 0 !important;
+        height: auto !important;
         gap: 3rem !important;
-        justify-content: flex-start !important;
     }
 
     .cafe-frames-wrapper {
         width: 100% !important;
-        max-width: 320px !important;
+        max-width: 240px !important;
         margin: 0 auto !important;
-        aspect-ratio: 4 / 5 !important;
+        aspect-ratio: 9 / 16 !important;
     }
 
     .content-block,
@@ -3107,6 +3082,7 @@ canvas {
 
     #horizontal-spacer,
     .scroll-video-container,
+    .cafe-panel,
     #interactive-nails {
         height: auto !important;
         min-height: 0 !important;
