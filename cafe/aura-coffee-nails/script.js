@@ -374,41 +374,28 @@ if (contactBtn && contactModal && closeContactBtn) {
         ctx.drawImage(img, x, y, w, h);
     }
 
-    let targetFrame = 0;
-    let smoothedFrame = 0;
+    let currentFrame = 0;
+    let lastTime = 0;
+    const fps = 30;
+    const interval = 1000 / fps;
 
-    window.scrollCallbacks.push(() => {
-        let progress = 0;
-        const panel = document.querySelector('.cafe-panel');
-        if(panel) {
-            const rect = panel.getBoundingClientRect();
-            if (rect.height > window.innerHeight) {
-                // Sticky mode: calculate based on the panel scrolling past the viewport
-                const total = rect.height - window.innerHeight;
-                const scrolled = -rect.top;
-                if (total > 0) progress = scrolled / total;
-            } else {
-                // Normal mode: calculate based on panel entering from bottom to leaving top
-                const total = window.innerHeight + rect.height;
-                const scrolled = window.innerHeight - rect.top;
-                if (total > 0 && scrolled > 0) progress = scrolled / total;
-            }
-        }
-        
-        if (isNaN(progress)) progress = 0;
-        progress = Math.max(0, Math.min(1, progress));
-        targetFrame = progress * (totalFrames - 1);
-    });
-
-    function cafeLoop() {
+    function cafeLoop(time) {
         requestAnimationFrame(cafeLoop);
-        if (isNaN(targetFrame)) targetFrame = 0;
-        smoothedFrame += (targetFrame - smoothedFrame) * 0.15; // smooth transition
-        const frameIndex = Math.min(totalFrames - 1, Math.max(0, Math.round(smoothedFrame)));
-        drawFrame(frameIndex);
+        
+        if(wrapper) {
+            const rect = wrapper.getBoundingClientRect();
+            // Only play if visible in viewport
+            if(rect.bottom < 0 || rect.top > window.innerHeight) return;
+        }
+
+        if (time - lastTime >= interval) {
+            lastTime = time;
+            currentFrame = (currentFrame + 1) % totalFrames;
+            drawFrame(currentFrame);
+        }
     }
 
-    cafeLoop();
+    requestAnimationFrame(cafeLoop);
 })();
 
 // Extended Colors Modal Logic
