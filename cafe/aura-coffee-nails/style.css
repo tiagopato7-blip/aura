@@ -433,7 +433,7 @@ canvas {
 .cafe-frames-wrapper {
     position: relative;
     width: 100%;
-    max-width: 1000px; /* Massive size */
+    max-width: 450px; /* Reduced to look much smaller on desktop */
     flex: 2; /* Takes up much more horizontal space */
     aspect-ratio: 1 / 1;
     overflow: visible; /* Allow glow to spill out */
@@ -2112,15 +2112,15 @@ canvas {
 
 /* Animations */
 .col-slow .testimonial-track {
-    animation: marquee-y 35s linear infinite;
+    animation: marquee-y 12s linear infinite;
 }
 
 .col-medium .testimonial-track {
-    animation: marquee-y 45s linear infinite;
+    animation: marquee-y 16s linear infinite;
 }
 
 .col-fast .testimonial-track {
-    animation: marquee-y 30s linear infinite;
+    animation: marquee-y 9s linear infinite;
 }
 
 /* Pause on hover */
@@ -2795,11 +2795,11 @@ canvas {
     
     .cafe-frames-wrapper {
         width: 100% !important;
-        max-width: 220px !important; /* Reduced from 350px to make it smaller */
+        max-width: 550px !important; /* Extremely large size */
         margin: 0 auto !important;
         position: sticky !important;
-        top: 25vh !important; /* Centered vertically */
-        height: 50vh !important; /* Reduced height */
+        top: 15vh !important; /* Move higher to accommodate the massive height */
+        height: 75vh !important; /* Massive height taking up most of the screen */
         display: flex;
         justify-content: center;
         align-items: center;
@@ -2837,13 +2837,13 @@ canvas {
     
     /* Scroll Video Section */
     .scroll-video-container {
-        height: 200vh !important; /* Allow scroll space to scrub animation */
-        padding: 0 !important;
+        height: auto !important; /* No longer pinned */
+        padding: 4rem 0 !important;
     }
     .scroll-video-sticky {
-        position: sticky !important;
-        height: 100vh !important;
-        top: 0 !important;
+        position: relative !important;
+        height: 65vh !important; /* Slightly smaller to fit entirely on screen */
+        top: auto !important;
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -2851,8 +2851,8 @@ canvas {
     }
     #scroll-video-canvas {
         width: 100vw !important;
-        height: 100vh !important;
-        object-fit: cover !important;
+        height: 100% !important;
+        object-fit: contain !important; /* Ensures the girl is completely visible and never cut off */
     }
     .scroll-video-symbol {
         top: 1rem !important;

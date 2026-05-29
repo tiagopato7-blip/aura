@@ -2,28 +2,28 @@
 (() => {
     const overlay = document.getElementById('mobile-warning-overlay');
     const countdownEl = document.getElementById('warning-countdown');
-    
+
     if (!overlay || !countdownEl) return;
-    
+
     // Check if on mobile
     if (window.innerWidth <= 768) {
         // Block scrolling
         document.body.style.overflow = 'hidden';
-        
+
         // Show overlay with slight delay for transition
         setTimeout(() => {
             overlay.classList.add('active');
         }, 100);
-        
+
         let timeLeft = 5;
         const timer = setInterval(() => {
             timeLeft--;
             countdownEl.textContent = timeLeft;
-            
+
             if (timeLeft <= 0) {
                 clearInterval(timer);
                 overlay.classList.remove('active');
-                
+
                 // Unblock scrolling
                 setTimeout(() => {
                     document.body.style.overflow = '';
@@ -51,10 +51,10 @@ if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
     interactives.forEach(el => {
         el.addEventListener('mouseenter', () => {
             cursor.style.transform = 'translate(-50%, -50%) scale(1.5)';
-            if(el.classList.contains('menu-item') || el.classList.contains('active') || el.tagName.toLowerCase() === 'li') {
+            if (el.classList.contains('menu-item') || el.classList.contains('active') || el.tagName.toLowerCase() === 'li') {
                 cursor.style.backgroundColor = 'var(--color-matcha)';
-            } else if(el.classList.contains('floating-widget')) {
-                cursor.style.transform = 'translate(-50%, -50%) scale(0)'; 
+            } else if (el.classList.contains('floating-widget')) {
+                cursor.style.transform = 'translate(-50%, -50%) scale(0)';
             }
         });
         el.addEventListener('mouseleave', () => {
@@ -87,17 +87,17 @@ window.addEventListener('scroll', () => {
     // Calculate how far we are down the horizontal spacer
     const rect = horizSpacer.getBoundingClientRect();
     const scrollTrigger = rect.top; // When this is 0, we hit the section
-    
+
     // Total distance the horizontal pin stays active
     const horizMaxScroll = horizSpacer.offsetHeight - window.innerHeight;
-    
+
     // Scroll distance inside the spacer
     let horizFraction = (-scrollTrigger) / horizMaxScroll;
-    
+
     // Create a "dead zone" at the end. We hit 100% horizontal scroll when we are only 75% through the vertical spacer.
     // The last 25% of the scroll distance does nothing, creating a pause before the page unsticks.
     let mappedFraction = horizFraction / 0.75;
-    
+
     horizTarget = Math.max(0, Math.min(1, mappedFraction));
 });
 
@@ -105,11 +105,11 @@ window.addEventListener('scroll', () => {
 function animLoop() {
     // Horizontal Smoothing
     horizCurrent += (horizTarget - horizCurrent) * 0.2;
-    
+
     // Only apply horizontal translation on desktop
     if (window.innerWidth > 768) {
         // Translate from 25vw to -75vw so each 50vw panel perfectly centers on the 100vw screen
-        const translateValue = 25 - (horizCurrent * 100); 
+        const translateValue = 25 - (horizCurrent * 100);
         horizContent.style.transform = `translateX(${translateValue}vw)`;
     } else {
         // On mobile, CSS flex-direction: column takes over
@@ -125,24 +125,24 @@ animLoop();
 (() => {
     const colorBtns = document.querySelectorAll('.color-btn');
     const nailsVideo = document.querySelector('.nails-video');
-    
+
     if (!nailsVideo || colorBtns.length === 0) return;
 
     colorBtns.forEach(btn => {
         btn.addEventListener('click', () => {
             const videoSrc = btn.getAttribute('data-video');
-            
+
             // Remove active from all buttons
             colorBtns.forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-            
+
             // If no video assigned to this color, hide video and stop
             if (!videoSrc) {
                 nailsVideo.classList.remove('active');
                 nailsVideo.pause();
                 return;
             }
-            
+
             // Only reload if the source actually changed
             if (nailsVideo.getAttribute('data-current') !== videoSrc) {
                 nailsVideo.setAttribute('data-current', videoSrc);
@@ -153,9 +153,9 @@ animLoop();
                 // Same color tapped again — restart from beginning
                 nailsVideo.currentTime = 0;
             }
-            
+
             nailsVideo.classList.add('active');
-            
+
             // Promise handling for play() to avoid AbortError
             const playPromise = nailsVideo.play();
             if (playPromise !== undefined) {
@@ -177,7 +177,7 @@ animLoop();
 const reveals = document.querySelectorAll('.reveal, .reveal-grand');
 const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
-        if(entry.isIntersecting) {
+        if (entry.isIntersecting) {
             entry.target.classList.add('active');
         }
     });
@@ -214,15 +214,15 @@ if (contactBtn && contactModal && closeContactBtn) {
         // Fast looping strategy: reset currentTime slightly before the physical end
         // of the video file to bypass any trailing black frames or decoder lags
         const buffer = 0.08; // 80ms buffer is optimal for most browsers
-        heroVideo.addEventListener('timeupdate', function() {
+        heroVideo.addEventListener('timeupdate', function () {
             if (this.duration && this.currentTime >= this.duration - buffer) {
                 this.currentTime = 0.03; // Start slightly after 0 to avoid initial keyframe delay
                 this.play();
             }
         });
-        
+
         // Fail-safe fallback if timeupdate event is delayed
-        heroVideo.addEventListener('ended', function() {
+        heroVideo.addEventListener('ended', function () {
             this.currentTime = 0.03;
             this.play();
         });
@@ -235,15 +235,15 @@ if (contactBtn && contactModal && closeContactBtn) {
     const nextBtn = document.getElementById('mag-next');
     const book = document.getElementById('trends-book');
     const indicatorSpan = document.getElementById('mag-current-spread');
-    
+
     if (!book || !prevBtn || !nextBtn) return;
-    
+
     const sheets = book.querySelectorAll('.book-sheet');
     let currentSpread = 0;
     const maxSpreads = 4; // 0: Cover, 1: Spread 1 (Pages 2-3), 2: Spread 2 (Pages 4-5), 3: Spread 3 (Pages 6-7), 4: Back cover (Page 8)
-    
+
     const spreadNames = ["Portada", "Matcha & Quartz", "Celeste & Orange", "Sunflower & Purple Pastel", "Contraportada"];
-    
+
     function updateMagazine() {
         // Remove previous spread classes from book
         for (let i = 0; i <= maxSpreads; i++) {
@@ -266,40 +266,40 @@ if (contactBtn && contactModal && closeContactBtn) {
                 sheet.style.zIndex = sheets.length - idx;
             }
         });
-        
+
         // Center spine offset toggles
         if (currentSpread > 0) {
             book.classList.add('is-open');
         } else {
             book.classList.remove('is-open');
         }
-        
+
         // Update navigation buttons active states
         prevBtn.disabled = currentSpread === 0;
         nextBtn.disabled = currentSpread === maxSpreads;
-        
+
         // Update pagination indicator
         indicatorSpan.textContent = spreadNames[currentSpread];
     }
-    
+
     prevBtn.addEventListener('click', () => {
         if (currentSpread > 0) {
             currentSpread--;
             updateMagazine();
         }
     });
-    
+
     nextBtn.addEventListener('click', () => {
         if (currentSpread < maxSpreads) {
             currentSpread++;
             updateMagazine();
         }
     });
-    
+
     // Open cover directly on click
     const coverPage = book.querySelector('.cover-page');
     const magCta = book.querySelector('.mag-cta');
-    
+
     const openBook = () => {
         if (currentSpread === 0) {
             currentSpread = 1;
@@ -312,7 +312,7 @@ if (contactBtn && contactModal && closeContactBtn) {
         e.stopPropagation();
         openBook();
     });
-    
+
     // Reset back cover on click to return to cover
     const backPage = book.querySelector('.back-page');
     if (backPage) {
@@ -321,7 +321,7 @@ if (contactBtn && contactModal && closeContactBtn) {
             updateMagazine();
         });
     }
-    
+
     // Smooth scroll booking logic
     const bookingBtn = book.querySelector('.trends-book-btn');
     if (bookingBtn) {
@@ -333,7 +333,7 @@ if (contactBtn && contactModal && closeContactBtn) {
             }
         });
     }
-    
+
     // Initialize
     updateMagazine();
 })();
@@ -342,7 +342,7 @@ if (contactBtn && contactModal && closeContactBtn) {
 (() => {
     const header = document.querySelector('.main-header');
     if (!header) return;
-    
+
     let lastScrollY = window.scrollY;
     window.addEventListener('scroll', () => {
         // Only run scroll effect on desktop screens (larger than 768px)
@@ -434,8 +434,8 @@ if (contactBtn && contactModal && closeContactBtn) {
         const cw = canvas.width;
         const ch = canvas.height;
 
-        // Cover-fit: scale to fill canvas and center-crop
-        const scale = Math.max(cw / img.naturalWidth, ch / img.naturalHeight);
+        // Contain-fit: scale to fit entirely within canvas without cropping
+        const scale = Math.min(cw / img.naturalWidth, ch / img.naturalHeight);
         const w = img.naturalWidth * scale;
         const h = img.naturalHeight * scale;
         const x = (cw - w) / 2;
@@ -449,10 +449,10 @@ if (contactBtn && contactModal && closeContactBtn) {
     // Panel 1 (café) is visible from 0 to ~0.45. Map that range to frames 0→totalFrames.
     // Use a smoothed frame value (lerp) to ensure buttery-fluid playback.
     let smoothedFrame = 0;
-    
+
     function cafeLoop() {
         let panelProgress;
-        
+
         if (window.innerWidth > 768) {
             // Desktop: Animation linked to horizontal scroll progress
             panelProgress = Math.min(1, horizCurrent / 0.45);
@@ -462,20 +462,22 @@ if (contactBtn && contactModal && closeContactBtn) {
             if (panel) {
                 const rect = panel.getBoundingClientRect();
                 const windowHeight = window.innerHeight;
-                // Progress from 0 (enters bottom of screen) to 1 (leaves top)
-                const totalScrollDistance = windowHeight + rect.height;
-                const scrolled = windowHeight - rect.top;
-                panelProgress = Math.max(0, Math.min(1, (scrolled / totalScrollDistance) * 1.1));
+                // Delay the start by 135% of the screen height so you have to scroll even further down for it to begin
+                const startOffset = windowHeight * 1.35;
+                const totalScrollDistance = (windowHeight + rect.height) - startOffset;
+                const scrolled = windowHeight - rect.top - startOffset;
+                // Multiply by 2.2 to make it slightly less fast
+                panelProgress = Math.max(0, Math.min(1, (scrolled / totalScrollDistance) * 2.2));
             } else {
                 panelProgress = 0;
             }
         }
-        
+
         const targetFrame = panelProgress * (totalFrames - 1);
-        
-        // Lerp toward the target frame — 0.05 gives a buttery smooth follow on mobile
-        smoothedFrame += (targetFrame - smoothedFrame) * 0.05;
-        
+
+        // Lerp toward the target frame — increased to 0.25 for much faster, snappier response
+        smoothedFrame += (targetFrame - smoothedFrame) * 0.25;
+
         const frameIndex = Math.min(totalFrames - 1, Math.max(0, Math.round(smoothedFrame)));
         drawFrame(frameIndex);
         requestAnimationFrame(cafeLoop);
@@ -583,16 +585,16 @@ if (contactBtn && contactModal && closeContactBtn) {
             const card = document.createElement('a');
             card.className = 'color-card';
             card.href = '#';
-            
+
             // Interactive hover effect changing the custom cursor color
             card.addEventListener('mouseenter', () => {
-                if(typeof cursor !== 'undefined' && cursor) {
+                if (typeof cursor !== 'undefined' && cursor) {
                     cursor.style.transform = 'translate(-50%, -50%) scale(1.5)';
                     cursor.style.backgroundColor = color.hex;
                 }
             });
             card.addEventListener('mouseleave', () => {
-                if(typeof cursor !== 'undefined' && cursor) {
+                if (typeof cursor !== 'undefined' && cursor) {
                     cursor.style.transform = 'translate(-50%, -50%) scale(1)';
                     cursor.style.backgroundColor = 'var(--color-pink)';
                 }
@@ -603,7 +605,7 @@ if (contactBtn && contactModal && closeContactBtn) {
                 <div class="color-name">${color.name}</div>
                 <div class="color-hex">${color.hex}</div>
             `;
-            
+
             grid.appendChild(card);
         });
     }
@@ -628,11 +630,11 @@ if (contactBtn && contactModal && closeContactBtn) {
         };
         const hslA = getHSL(a.hex);
         const hslB = getHSL(b.hex);
-        
+
         // Push grayscale/neutral colors to the end
         if (hslA.s < 10 && hslB.s >= 10) return 1;
         if (hslB.s < 10 && hslA.s >= 10) return -1;
-        
+
         // Group by hue roughly
         if (Math.abs(hslA.h - hslB.h) > 8) {
             return hslA.h - hslB.h;
@@ -646,8 +648,8 @@ if (contactBtn && contactModal && closeContactBtn) {
     // Search functionality
     searchInput.addEventListener('input', (e) => {
         const term = e.target.value.toLowerCase();
-        const filtered = colorsDB.filter(c => 
-            c.name.toLowerCase().includes(term) || 
+        const filtered = colorsDB.filter(c =>
+            c.name.toLowerCase().includes(term) ||
             c.hex.toLowerCase().includes(term)
         );
         renderColors(filtered);
@@ -742,11 +744,11 @@ if (contactBtn && contactModal && closeContactBtn) {
         const cw = canvas.width;
         const ch = canvas.height;
 
-        // Fill the canvas exactly. Since the canvas is now properly 16:9, there will be no cropping or white space.
-        const scale = Math.max(cw / img.naturalWidth, ch / img.naturalHeight);
+        // Contain-fit to avoid zooming and cropping
+        const scale = Math.min(cw / img.naturalWidth, ch / img.naturalHeight);
         const w = img.naturalWidth * scale;
         const h = img.naturalHeight * scale;
-        
+
         // Center perfectly
         const x = (cw - w) / 2;
         const y = (ch - h) / 2;
@@ -761,16 +763,24 @@ if (contactBtn && contactModal && closeContactBtn) {
     window.addEventListener('scroll', () => {
         const rect = section.getBoundingClientRect();
         const scrollMax = section.offsetHeight - window.innerHeight;
-        
-        // Only calculate progress while the screen is strictly locked (rect.top <= 0)
-        let progress = -rect.top / scrollMax;
+
+        let progress;
+        if (window.innerWidth <= 768) {
+            // Scroll normally, map animation to intersection
+            // Multiply by 1.5 for a middle-ground speed
+            progress = ((window.innerHeight - rect.top) / (window.innerHeight + rect.height)) * 1.5;
+        } else {
+            // Sticky logic for desktop
+            progress = -rect.top / scrollMax;
+        }
         progress = Math.max(0, Math.min(1, progress));
-        
+
         targetFrame = progress * (frameCount - 1);
     });
 
     function loop() {
-        smoothedFrame += (targetFrame - smoothedFrame) * 0.05;
+        // Increased lerp factor to 0.25 for snappier, faster response
+        smoothedFrame += (targetFrame - smoothedFrame) * 0.25;
         const frameIndex = Math.round(smoothedFrame);
         drawFrame(Math.min(frameCount - 1, frameIndex));
         requestAnimationFrame(loop);
