@@ -1,3 +1,42 @@
+// Mobile Warning Overlay Logic
+(() => {
+    const overlay = document.getElementById('mobile-warning-overlay');
+    const countdownEl = document.getElementById('warning-countdown');
+    
+    if (!overlay || !countdownEl) return;
+    
+    // Check if on mobile
+    if (window.innerWidth <= 768) {
+        // Block scrolling
+        document.body.style.overflow = 'hidden';
+        
+        // Show overlay with slight delay for transition
+        setTimeout(() => {
+            overlay.classList.add('active');
+        }, 100);
+        
+        let timeLeft = 5;
+        const timer = setInterval(() => {
+            timeLeft--;
+            countdownEl.textContent = timeLeft;
+            
+            if (timeLeft <= 0) {
+                clearInterval(timer);
+                overlay.classList.remove('active');
+                
+                // Unblock scrolling
+                setTimeout(() => {
+                    document.body.style.overflow = '';
+                    overlay.style.display = 'none'; // remove from flow completely
+                }, 1000); // Wait for fade out animation
+            }
+        }, 1000);
+    } else {
+        // Not mobile, remove immediately
+        overlay.style.display = 'none';
+    }
+})();
+
 // Custom Cursor Logic
 const cursor = document.querySelector('.cursor-blob');
 document.addEventListener('mousemove', (e) => {
