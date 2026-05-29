@@ -2777,7 +2777,7 @@ canvas {
         width: 100vw !important;
         display: block !important;
         padding: 4rem 1.5rem 0 !important;
-        height: 150vh !important; /* Allow scroll for locked animation */
+        height: auto !important; /* Removed locked animation height to let it flow naturally */
     }
     
     .content-block, .glass-card {
@@ -2796,9 +2796,9 @@ canvas {
     .cafe-frames-wrapper {
         width: 100% !important;
         max-width: 550px !important; /* Extremely large size */
-        margin: 0 auto !important;
-        position: sticky !important;
-        top: 15vh !important; /* Move higher to accommodate the massive height */
+        margin: -3rem auto 0 auto !important; /* Negative top margin to reduce space */
+        position: relative !important; /* Removes the sticky lock */
+        top: auto !important; /* Reset top since it's no longer sticky */
         height: 75vh !important; /* Massive height taking up most of the screen */
         display: flex;
         justify-content: center;
