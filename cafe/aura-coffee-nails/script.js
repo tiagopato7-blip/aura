@@ -418,21 +418,6 @@ if (contactBtn && contactModal && closeContactBtn) {
     const frames = [];
     let loadedCount = 0;
     let lastFrameIndex = -1;
-    let canvasReady = false;
-
-    function initCanvas() {
-        if (canvas.offsetWidth > 0 && canvas.offsetHeight > 0) {
-            canvas.width = canvas.offsetWidth;
-            canvas.height = canvas.offsetHeight;
-            canvasReady = true;
-        }
-    }
-
-    window.addEventListener('resize', () => {
-        canvasReady = false;
-        initCanvas();
-        lastFrameIndex = -1;
-    });
 
     for (let i = 0; i < totalFrames; i++) {
         const img = new Image();
@@ -442,7 +427,6 @@ if (contactBtn && contactModal && closeContactBtn) {
         img.onload = () => {
             loadedCount++;
             if (loadedCount === 1) {
-                initCanvas();
                 drawFrame(0);
             }
             if (loadedCount === totalFrames && loadingEl) {
@@ -454,8 +438,17 @@ if (contactBtn && contactModal && closeContactBtn) {
     }
 
     function drawFrame(index) {
-        if (!canvasReady) initCanvas();
-        if (!canvasReady) return;
+        // Fallback dimensions if CSS hasn't applied properly yet
+        const cw = canvas.offsetWidth || 500;
+        const ch = canvas.offsetHeight || 500;
+        
+        // Auto-resize internal canvas to match display size
+        if (canvas.width !== cw || canvas.height !== ch) {
+            canvas.width = cw;
+            canvas.height = ch;
+            lastFrameIndex = -1; // force redraw
+        }
+
         if (index === lastFrameIndex) return;
 
         const img = frames[index];
@@ -463,8 +456,6 @@ if (contactBtn && contactModal && closeContactBtn) {
 
         lastFrameIndex = index;
 
-        const cw = canvas.width;
-        const ch = canvas.height;
         const scale = Math.min(cw / img.naturalWidth, ch / img.naturalHeight);
         const w = img.naturalWidth * scale;
         const h = img.naturalHeight * scale;
@@ -483,25 +474,27 @@ if (contactBtn && contactModal && closeContactBtn) {
         if (window.innerWidth <= 768) {
             if(panel) {
                 const rect = panel.getBoundingClientRect();
-                const scrolled = window.innerHeight - rect.top;
                 const total = window.innerHeight + rect.height;
-                if (scrolled > 0) progress = scrolled / total;
+                const scrolled = window.innerHeight - rect.top;
+                if (total > 0 && scrolled > 0) progress = scrolled / total;
             }
         } else {
             const rect = spacer.getBoundingClientRect();
             const scrollMax = rect.height - window.innerHeight;
-            if (scrollMax > 0) progress = -rect.top / scrollMax;
-            
-            // Map the first 33% of spacer scroll to 100% of frames so it plays while panel is visible
+            if (scrollMax > 0) {
+                progress = -rect.top / scrollMax;
+            }
             progress = progress * 2.5; 
         }
         
+        if (isNaN(progress)) progress = 0;
         progress = Math.max(0, Math.min(1, progress));
         targetFrame = progress * (totalFrames - 1);
     });
 
     function cafeLoop() {
         requestAnimationFrame(cafeLoop);
+        if (isNaN(targetFrame)) targetFrame = 0;
         smoothedFrame += (targetFrame - smoothedFrame) * 0.25;
         const frameIndex = Math.min(totalFrames - 1, Math.max(0, Math.round(smoothedFrame)));
         drawFrame(frameIndex);
@@ -509,6 +502,7 @@ if (contactBtn && contactModal && closeContactBtn) {
 
     cafeLoop();
 })();
+
 
 // Extended Colors Modal Logic
 (() => {
@@ -724,22 +718,6 @@ if (contactBtn && contactModal && closeContactBtn) {
     const frames = [];
     let loadedCount = 0;
     let currentFrameIndex = -1;
-    let canvasReady = false;
-
-    function initCanvas() {
-        if (canvas.offsetWidth > 0 && canvas.offsetHeight > 0) {
-            canvas.width = canvas.offsetWidth;
-            canvas.height = canvas.offsetHeight;
-            canvasReady = true;
-            if (loadedCount > 0) drawFrame(Math.max(0, currentFrameIndex));
-        }
-    }
-
-    window.addEventListener('resize', () => {
-        canvasReady = false;
-        initCanvas();
-        currentFrameIndex = -1; 
-    });
 
     for (let i = 1; i <= frameCount; i++) {
         const img = new Image();
@@ -748,7 +726,6 @@ if (contactBtn && contactModal && closeContactBtn) {
         img.onload = () => {
             loadedCount++;
             if (loadedCount === 1) {
-                initCanvas();
                 drawFrame(0);
             }
         };
@@ -756,8 +733,15 @@ if (contactBtn && contactModal && closeContactBtn) {
     }
 
     function drawFrame(index) {
-        if (!canvasReady) initCanvas();
-        if (!canvasReady) return;
+        const cw = canvas.offsetWidth || 500;
+        const ch = canvas.offsetHeight || 500;
+        
+        if (canvas.width !== cw || canvas.height !== ch) {
+            canvas.width = cw;
+            canvas.height = ch;
+            currentFrameIndex = -1; // force redraw
+        }
+
         if (index === currentFrameIndex) return;
 
         const img = frames[index];
@@ -765,8 +749,6 @@ if (contactBtn && contactModal && closeContactBtn) {
 
         currentFrameIndex = index;
 
-        const cw = canvas.width;
-        const ch = canvas.height;
         const scale = Math.min(cw / img.naturalWidth, ch / img.naturalHeight);
         const w = img.naturalWidth * scale;
         const h = img.naturalHeight * scale;
@@ -785,20 +767,22 @@ if (contactBtn && contactModal && closeContactBtn) {
         let progress = 0;
         
         if (window.innerWidth <= 768) {
-            const scrolled = window.innerHeight - rect.top;
             const total = window.innerHeight + rect.height;
-            if(scrolled > 0) progress = scrolled / total;
+            const scrolled = window.innerHeight - rect.top;
+            if(total > 0 && scrolled > 0) progress = scrolled / total;
         } else {
             const scrollMax = rect.height - window.innerHeight;
             if(scrollMax > 0) progress = -rect.top / scrollMax;
         }
         
+        if (isNaN(progress)) progress = 0;
         progress = Math.max(0, Math.min(1, progress));
         targetFrame = progress * (frameCount - 1);
     });
 
     function loop() {
         requestAnimationFrame(loop);
+        if (isNaN(targetFrame)) targetFrame = 0;
         smoothedFrame += (targetFrame - smoothedFrame) * 0.25;
         const frameIndex = Math.round(smoothedFrame);
         drawFrame(Math.min(frameCount - 1, Math.max(0, frameIndex)));
