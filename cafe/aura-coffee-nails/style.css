@@ -195,47 +195,6 @@ body:hover .cursor-blob {
     min-height: 100dvh;
 }
 
-/* Ticker Tape / Marquee */
-.ticker-wrap {
-    width: 100%;
-    overflow: hidden;
-    background: var(--color-pink);
-    /* Update background to user color */
-    border-bottom: none;
-    padding: 12px 0;
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 200;
-}
-
-.ticker {
-    display: inline-block;
-    white-space: nowrap;
-    animation: ticker 40s linear infinite;
-    color: #4A3628;
-    /* Harmonious chestnut / espresso brown */
-    font-family: var(--font-sans);
-    font-size: 0.9rem;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    font-weight: 500;
-}
-
-.ticker__item {
-    display: inline-block;
-    padding: 0 2rem;
-}
-
-@keyframes ticker {
-    0% {
-        transform: translate3d(0, 0, 0);
-    }
-
-    100% {
-        transform: translate3d(-50%, 0, 0);
-    }
-}
 
 /* Pinned Hero Section */
 #hero-spacer {
@@ -1675,7 +1634,7 @@ canvas {
 }
 .main-header {
     position: fixed;
-    top: 60px; /* Floats perfectly below the top ticker wrap */
+    top: 20px; /* Floats perfectly at top */
     left: 0;
     width: 100%;
     padding: 0 5vw;
@@ -1799,7 +1758,7 @@ canvas {
 /* Responsive capsule adjustments for tablet/mobile */
 @media(max-width: 768px) {
     .main-header {
-        top: 60px !important; /* Keep floating static relative below mobile ticker wrap */
+        top: 20px !important; /* Fixed capsule near top on mobile */
         padding: 0 3vw;
     }
     

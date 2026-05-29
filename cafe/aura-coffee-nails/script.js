@@ -394,7 +394,7 @@ if (contactBtn && contactModal && closeContactBtn) {
         } else {
             header.style.transform = 'translateY(0)';
             header.style.opacity = '1';
-            header.style.top = '60px';
+            header.style.top = '20px';
         }
         lastScrollY = scrollY;
     };
