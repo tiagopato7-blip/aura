@@ -61,9 +61,16 @@ window.addEventListener('scroll', () => {
 function animLoop() {
     // Horizontal Smoothing
     horizCurrent += (horizTarget - horizCurrent) * 0.2;
-    // Translate from 25vw to -75vw so each 50vw panel perfectly centers on the 100vw screen
-    const translateValue = 25 - (horizCurrent * 100); 
-    horizContent.style.transform = `translateX(${translateValue}vw)`;
+    
+    // Only apply horizontal translation on desktop
+    if (window.innerWidth > 768) {
+        // Translate from 25vw to -75vw so each 50vw panel perfectly centers on the 100vw screen
+        const translateValue = 25 - (horizCurrent * 100); 
+        horizContent.style.transform = `translateX(${translateValue}vw)`;
+    } else {
+        // On mobile, CSS flex-direction: column takes over
+        horizContent.style.transform = 'none';
+    }
 
     requestAnimationFrame(animLoop);
 }
@@ -232,16 +239,28 @@ if (contactBtn && contactModal && closeContactBtn) {
     }
     
     prevBtn.addEventListener('click', () => {
-        if (currentSpread > 0) {
-            currentSpread--;
-            updateMagazine();
+        if (window.innerWidth <= 768) {
+            // On mobile, native smooth scroll to the left
+            book.scrollBy({ left: -window.innerWidth, behavior: 'smooth' });
+        } else {
+            // On desktop, use the 3D spread logic
+            if (currentSpread > 0) {
+                currentSpread--;
+                updateMagazine();
+            }
         }
     });
     
     nextBtn.addEventListener('click', () => {
-        if (currentSpread < maxSpreads) {
-            currentSpread++;
-            updateMagazine();
+        if (window.innerWidth <= 768) {
+            // On mobile, native smooth scroll to the right
+            book.scrollBy({ left: window.innerWidth, behavior: 'smooth' });
+        } else {
+            // On desktop, use the 3D spread logic
+            if (currentSpread < maxSpreads) {
+                currentSpread++;
+                updateMagazine();
+            }
         }
     });
     
@@ -392,7 +411,27 @@ if (contactBtn && contactModal && closeContactBtn) {
     let smoothedFrame = 0;
     
     function cafeLoop() {
-        const panelProgress = Math.min(1, horizCurrent / 0.45);
+        let panelProgress;
+        
+        if (window.innerWidth > 768) {
+            // Desktop: Animation linked to horizontal scroll progress
+            panelProgress = Math.min(1, horizCurrent / 0.45);
+        } else {
+            // Mobile: Animation linked to vertical scroll of the specific panel
+            const panel = document.querySelector('.cafe-panel');
+            if (panel) {
+                const rect = panel.getBoundingClientRect();
+                const windowHeight = window.innerHeight;
+                // Progress from 0 (enters bottom of screen) to 1 (leaves top)
+                const totalScrollDistance = windowHeight + rect.height;
+                const scrolled = windowHeight - rect.top;
+                // Adding a multiplier (like 1.5) to make it finish playing earlier so it's fully poured while readable
+                panelProgress = Math.max(0, Math.min(1, (scrolled / totalScrollDistance) * 1.5));
+            } else {
+                panelProgress = 0;
+            }
+        }
+        
         const targetFrame = panelProgress * (totalFrames - 1);
         
         // Lerp toward the target frame — 0.12 gives a silky smooth follow
