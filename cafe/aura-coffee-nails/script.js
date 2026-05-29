@@ -469,22 +469,12 @@ if (contactBtn && contactModal && closeContactBtn) {
     let targetFrame = 0;
     let smoothedFrame = 0;
 
-    window.scrollCallbacks.push(() => {
+    window.scrollCallbacks.push((scrollY) => {
         let progress = 0;
         if (window.innerWidth <= 768) {
-            if(panel) {
-                const rect = panel.getBoundingClientRect();
-                const total = window.innerHeight + rect.height;
-                const scrolled = window.innerHeight - rect.top;
-                if (total > 0 && scrolled > 0) progress = scrolled / total;
-            }
+            progress = window.mobileCafeTargetProgress || 0;
         } else {
-            const rect = spacer.getBoundingClientRect();
-            const scrollMax = rect.height - window.innerHeight;
-            if (scrollMax > 0) {
-                progress = -rect.top / scrollMax;
-            }
-            progress = progress * 2.5; 
+            progress = horizCurrent / 0.45;
         }
         
         if (isNaN(progress)) progress = 0;
@@ -762,17 +752,17 @@ if (contactBtn && contactModal && closeContactBtn) {
     let targetFrame = 0;
     let smoothedFrame = 0;
 
-    window.scrollCallbacks.push(() => {
-        const rect = section.getBoundingClientRect();
+    window.scrollCallbacks.push((scrollY) => {
+        const rectTop = scrollVideoOffsetTop - scrollY;
         let progress = 0;
         
         if (window.innerWidth <= 768) {
-            const total = window.innerHeight + rect.height;
-            const scrolled = window.innerHeight - rect.top;
-            if(total > 0 && scrolled > 0) progress = scrolled / total;
+            const total = window.innerHeight + scrollVideoHeight;
+            const scrolled = window.innerHeight - rectTop;
+            if(total > 0 && scrolled > 0) progress = (scrolled / total) * 1.5;
         } else {
-            const scrollMax = rect.height - window.innerHeight;
-            if(scrollMax > 0) progress = -rect.top / scrollMax;
+            const scrollMax = scrollVideoHeight - window.innerHeight;
+            if(scrollMax > 0) progress = -rectTop / scrollMax;
         }
         
         if (isNaN(progress)) progress = 0;
