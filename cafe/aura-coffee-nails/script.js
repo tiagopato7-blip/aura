@@ -457,10 +457,11 @@ if (contactBtn && contactModal && closeContactBtn) {
         if (!canvasReady) initCanvas();
         if (!canvasReady) return;
         if (index === lastFrameIndex) return;
-        lastFrameIndex = index;
 
         const img = frames[index];
         if (!img || !img.complete || !img.naturalWidth) return;
+
+        lastFrameIndex = index;
 
         const cw = canvas.width;
         const ch = canvas.height;
@@ -758,10 +759,11 @@ if (contactBtn && contactModal && closeContactBtn) {
         if (!canvasReady) initCanvas();
         if (!canvasReady) return;
         if (index === currentFrameIndex) return;
-        currentFrameIndex = index;
 
         const img = frames[index];
         if (!img || !img.complete || !img.naturalWidth) return;
+
+        currentFrameIndex = index;
 
         const cw = canvas.width;
         const ch = canvas.height;
