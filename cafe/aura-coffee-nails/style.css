@@ -38,6 +38,8 @@ html,
 body {
     margin: 0;
     padding: 0;
+    width: 100%;
+    height: 100%;
     overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
 }
@@ -98,7 +100,7 @@ body:hover .cursor-blob {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100vw;
+    width: 100%;
     height: 100vh;
     pointer-events: none;
     z-index: 2;
@@ -254,7 +256,7 @@ body:hover .cursor-blob {
     position: relative;
     /* Changed from sticky to allow immediate native scrolling */
     width: 100%;
-    min-height: 100vh;
+    min-height: 100dvh;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -277,7 +279,7 @@ body:hover .cursor-blob {
     position: relative;
     user-select: none;
     text-align: left;
-    margin-top: -5vh;
+    margin-top: 0;
 }
 
 /* THE ENLARGED FLOATING WIDGET */
@@ -1176,7 +1178,7 @@ canvas {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100vw;
+    width: 100%;
     height: 100vh;
     background: rgba(0, 0, 0, 0.6);
     backdrop-filter: blur(8px);
@@ -2780,7 +2782,7 @@ canvas {
 
     .app-container {
         overflow-x: hidden !important;
-        width: 100vw !important;
+        width: 100% !important;
         max-width: 100% !important;
     }
 
@@ -2838,7 +2840,7 @@ canvas {
         padding: 15vh 1rem 4rem 1rem !important;
         /* Start from top to prevent logo cut-off */
         height: auto !important;
-        min-height: calc(100vh + 80px) !important;
+        min-height: 100vh !important;
         /* Forces the next section entirely off-screen, compensating for the -60px margin-top */
         justify-content: flex-start !important;
         /* Prevent centering from pushing content off the top */
@@ -3136,7 +3138,7 @@ canvas {
 
     #hero-spacer {
         height: auto !important;
-        min-height: calc(100vh + 80px) !important;
+        min-height: 100vh !important;
     }
 
     #horizontal-spacer,
@@ -3204,3 +3206,16 @@ canvas {
         font-size: 2.2rem;
     }
 }
+
+<style>.app-container {
+    position: relative;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    z-index: 5;
+    min-height: auto;
+    overflow-x: hidden;
+    overflow-y: visible;
+}
+
+</style>
