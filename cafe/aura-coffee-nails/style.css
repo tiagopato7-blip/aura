@@ -2587,6 +2587,11 @@ canvas {
    AURA MOBILE OPTIMIZATION (PREMIUM RESPONSIVE)
    ========================================================================== */
 @media (max-width: 768px) {
+    /* Prevent touch highlight and hover sticking on mobile */
+    * {
+        -webkit-tap-highlight-color: transparent;
+    }
+    
     /* Smooth Reveal Overrides for Mobile */
     .reveal {
         transform: translateY(30px);

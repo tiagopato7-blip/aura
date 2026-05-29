@@ -39,27 +39,32 @@
 
 // Custom Cursor Logic
 const cursor = document.querySelector('.cursor-blob');
-document.addEventListener('mousemove', (e) => {
-    cursor.style.left = e.clientX + 'px';
-    cursor.style.top = e.clientY + 'px';
-});
 
-// Interactive elements hover effect on cursor
-const interactives = document.querySelectorAll('button, a, .menu-item, .date, .ig-item, .img-wrapper, .floating-widget, .chic-menu li, .hero-video, .testimonial-card, .mood-swatch');
-interactives.forEach(el => {
-    el.addEventListener('mouseenter', () => {
-        cursor.style.transform = 'translate(-50%, -50%) scale(1.5)';
-        if(el.classList.contains('menu-item') || el.classList.contains('active') || el.tagName.toLowerCase() === 'li') {
-            cursor.style.backgroundColor = 'var(--color-matcha)';
-        } else if(el.classList.contains('floating-widget')) {
-            cursor.style.transform = 'translate(-50%, -50%) scale(0)'; 
-        }
+if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+    document.addEventListener('mousemove', (e) => {
+        cursor.style.left = e.clientX + 'px';
+        cursor.style.top = e.clientY + 'px';
     });
-    el.addEventListener('mouseleave', () => {
-        cursor.style.transform = 'translate(-50%, -50%) scale(1)';
-        cursor.style.backgroundColor = 'var(--color-pink)';
+
+    // Interactive elements hover effect on cursor
+    const interactives = document.querySelectorAll('button, a, .menu-item, .date, .ig-item, .img-wrapper, .floating-widget, .chic-menu li, .hero-video, .testimonial-card, .mood-swatch');
+    interactives.forEach(el => {
+        el.addEventListener('mouseenter', () => {
+            cursor.style.transform = 'translate(-50%, -50%) scale(1.5)';
+            if(el.classList.contains('menu-item') || el.classList.contains('active') || el.tagName.toLowerCase() === 'li') {
+                cursor.style.backgroundColor = 'var(--color-matcha)';
+            } else if(el.classList.contains('floating-widget')) {
+                cursor.style.transform = 'translate(-50%, -50%) scale(0)'; 
+            }
+        });
+        el.addEventListener('mouseleave', () => {
+            cursor.style.transform = 'translate(-50%, -50%) scale(1)';
+            cursor.style.backgroundColor = 'var(--color-pink)';
+        });
     });
-});
+} else {
+    if (cursor) cursor.style.display = 'none';
+}
 
 // Booking Buttons Logic
 const svcBtns = document.querySelectorAll('.svc-btn');
