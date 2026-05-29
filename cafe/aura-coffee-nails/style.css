@@ -2884,19 +2884,21 @@ canvas {
         position: relative !important;
         top: auto !important;
         bottom: auto !important;
+        height: auto !important;
+        min-height: 100vh !important;
+        overflow: visible !important;
+        transform: none !important;
     }
     
-    #hero-spacer {
-        height: auto !important;
-        min-height: calc(100vh + 80px) !important;
-    }
-
+    #hero-spacer,
     #horizontal-spacer,
     .scroll-video-container,
     .cafe-panel,
-    #interactive-nails {
+    #interactive-nails,
+    #scroll-video-section {
         height: auto !important;
         min-height: 0 !important;
+        overflow: visible !important;
     }
 }
 
