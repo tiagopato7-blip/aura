@@ -65,23 +65,24 @@ h3,
     display: none;
 }
 
-/* Custom Cursor */
-.cursor-blob {
-    width: 20px;
-    height: 20px;
-    background-color: var(--color-matcha-light);
-    border-radius: 50%;
-    position: fixed;
-    pointer-events: none;
-    z-index: 99999; /* Higher than all modals */
-    mix-blend-mode: multiply;
-    /* Looks amazing on green! */
-    transition: width 0.3s var(--bezier), height 0.3s var(--bezier), background-color 0.3s var(--bezier);
-    transform: translate(-50%, -50%);
-}
+/* Custom Cursor - Restricted to desktop to prevent mobile touch interception bugs */
+@media (hover: hover) and (pointer: fine) {
+    .cursor-blob {
+        width: 20px;
+        height: 20px;
+        background-color: var(--color-matcha-light);
+        border-radius: 50%;
+        position: fixed;
+        pointer-events: none;
+        z-index: 99999; /* Higher than all modals */
+        mix-blend-mode: multiply;
+        transition: width 0.3s var(--bezier), height 0.3s var(--bezier), background-color 0.3s var(--bezier);
+        transform: translate(-50%, -50%);
+    }
 
-body:hover .cursor-blob {
-    opacity: 1;
+    body:hover .cursor-blob {
+        opacity: 1;
+    }
 }
 
 /* Aura Sparkles (Option 4) */
@@ -306,6 +307,7 @@ canvas {
     width: 100%;
     height: auto;
     display: block;
+    pointer-events: none; /* Prevents video from stealing touch events on mobile */
 }
 
 /* Typography & Details (Hero) */
