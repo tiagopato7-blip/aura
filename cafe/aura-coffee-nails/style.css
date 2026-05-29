@@ -2927,5 +2927,21 @@ canvas {
         height: auto !important;
         min-height: 0 !important;
     }
+
+    /* Axis Touch Optimization: force mobile browser to route touches instantly to native vertical scrolling without axis-locking lag */
+    #hero, 
+    #interactive-nails, 
+    #scroll-video-section, 
+    #booking, 
+    #testimonials, 
+    .footer,
+    #conocenos {
+        touch-action: pan-y;
+    }
+
+    /* Keep the horizontal book carousel scrollable horizontally on mobile */
+    .book {
+        touch-action: pan-x pan-y;
+    }
 }
 

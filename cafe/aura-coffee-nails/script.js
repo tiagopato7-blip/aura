@@ -45,26 +45,64 @@ const horizContent = document.querySelector('.horizontal-content');
 let horizTarget = 0;
 let horizCurrent = 0;
 
+// High-Performance Cached Dimensions to prevent Layout Thrashing on Scroll
+let horizSpacerOffsetTop = 0;
+let horizSpacerHeight = 0;
+let cafePanelOffsetTop = 0;
+let cafePanelHeight = 0;
+let scrollVideoOffsetTop = 0;
+let scrollVideoHeight = 0;
+
+function updateCachedDimensions() {
+    const scrollY = window.scrollY;
+    
+    if (horizSpacer) {
+        horizSpacerOffsetTop = horizSpacer.getBoundingClientRect().top + scrollY;
+        horizSpacerHeight = horizSpacer.offsetHeight;
+    }
+    
+    const panel = document.querySelector('.cafe-panel');
+    if (panel) {
+        cafePanelOffsetTop = panel.getBoundingClientRect().top + scrollY;
+        cafePanelHeight = panel.offsetHeight;
+    }
+    
+    const videoSection = document.getElementById('scroll-video-section');
+    if (videoSection) {
+        scrollVideoOffsetTop = videoSection.getBoundingClientRect().top + scrollY;
+        scrollVideoHeight = videoSection.offsetHeight;
+    }
+}
+
+// Initial cache and event bindings
+updateCachedDimensions();
+window.addEventListener('resize', updateCachedDimensions);
+window.addEventListener('load', updateCachedDimensions);
+
 window.addEventListener('scroll', () => {
+    const scrollY = window.scrollY;
+
     // Horizontal Scroll Section (Desktop Only)
     if (window.innerWidth > 768) {
-        const rect = horizSpacer.getBoundingClientRect();
-        const scrollTrigger = rect.top; 
-        const horizMaxScroll = horizSpacer.offsetHeight - window.innerHeight;
-        let horizFraction = (-scrollTrigger) / horizMaxScroll;
-        let mappedFraction = horizFraction / 0.75;
-        horizTarget = Math.max(0, Math.min(1, mappedFraction));
+        const scrollTrigger = horizSpacerOffsetTop - scrollY; 
+        const horizMaxScroll = horizSpacerHeight - window.innerHeight;
+        if (horizMaxScroll > 0) {
+            let horizFraction = (-scrollTrigger) / horizMaxScroll;
+            let mappedFraction = horizFraction / 0.75;
+            horizTarget = Math.max(0, Math.min(1, mappedFraction));
+        }
     }
 
-    // Calculate Cafe Animation Mobile Progress here instead of in rAF
+    // Calculate Cafe Animation Mobile Progress purely mathematically
     if (window.innerWidth <= 768) {
-        const panel = document.querySelector('.cafe-panel');
-        if (panel) {
-            const prect = panel.getBoundingClientRect();
+        if (cafePanelHeight > 0) {
+            const prectTop = cafePanelOffsetTop - scrollY;
             const startOffset = window.innerHeight * 1.35;
-            const totalScrollDistance = (window.innerHeight + prect.height) - startOffset;
-            const scrolled = window.innerHeight - prect.top - startOffset;
-            window.mobileCafeTargetProgress = Math.max(0, Math.min(1, (scrolled / totalScrollDistance) * 2.2));
+            const totalScrollDistance = (window.innerHeight + cafePanelHeight) - startOffset;
+            if (totalScrollDistance > 0) {
+                const scrolled = window.innerHeight - prectTop - startOffset;
+                window.mobileCafeTargetProgress = Math.max(0, Math.min(1, (scrolled / totalScrollDistance) * 2.2));
+            }
         }
     }
 }, { passive: true });
@@ -315,28 +353,27 @@ if (contactBtn && contactModal && closeContactBtn) {
     let lastScrollY = window.scrollY;
     window.addEventListener('scroll', () => {
         // Only run scroll effect on desktop screens (larger than 768px)
-        if (window.innerWidth > 768) {
-            if (window.scrollY > 120) {
-                if (window.scrollY > lastScrollY) {
-                    // Scrolling down: slide up and hide
-                    header.style.transform = 'translateY(-150%)';
-                    header.style.opacity = '0';
-                } else {
-                    // Scrolling up: reveal fixed capsule closer to top
-                    header.style.transform = 'translateY(0)';
-                    header.style.opacity = '1';
-                    header.style.top = '20px';
-                }
+        // Mobile layout keeps header completely static to prevent style dirtying and lag
+        if (window.innerWidth <= 768) {
+            return;
+        }
+
+        if (window.scrollY > 120) {
+            if (window.scrollY > lastScrollY) {
+                // Scrolling down: slide up and hide
+                header.style.transform = 'translateY(-150%)';
+                header.style.opacity = '0';
             } else {
-                // Near top: return to original position below ticker wrap
+                // Scrolling up: reveal fixed capsule closer to top
                 header.style.transform = 'translateY(0)';
                 header.style.opacity = '1';
-                header.style.top = '60px';
+                header.style.top = '20px';
             }
         } else {
-            // Mobile: keep it fixed at original position
+            // Near top: return to original position below ticker wrap
             header.style.transform = 'translateY(0)';
             header.style.opacity = '1';
+            header.style.top = '60px';
         }
         lastScrollY = window.scrollY;
     }, { passive: true });
@@ -419,7 +456,21 @@ if (contactBtn && contactModal && closeContactBtn) {
     // Use a smoothed frame value (lerp) to ensure buttery-fluid playback.
     let smoothedFrame = 0;
 
+    // IntersectionObserver to avoid rendering canvas frames when off-screen on mobile
+    let isCafeVisible = false;
+    const cafeObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            isCafeVisible = entry.isIntersecting;
+        });
+    }, { threshold: 0.01 });
+    cafeObserver.observe(canvas);
+
     function cafeLoop() {
+        requestAnimationFrame(cafeLoop);
+
+        // Bypass processing and rendering completely if off-screen on mobile
+        if (!isCafeVisible && window.innerWidth <= 768) return;
+
         let panelProgress;
 
         if (window.innerWidth > 768) {
@@ -437,7 +488,6 @@ if (contactBtn && contactModal && closeContactBtn) {
 
         const frameIndex = Math.min(totalFrames - 1, Math.max(0, Math.round(smoothedFrame)));
         drawFrame(frameIndex);
-        requestAnimationFrame(cafeLoop);
     }
 
     cafeLoop();
@@ -717,18 +767,28 @@ if (contactBtn && contactModal && closeContactBtn) {
     let targetFrame = 0;
     let smoothedFrame = 0;
 
+    // IntersectionObserver to avoid rendering canvas frames when off-screen on mobile
+    let isScrollVideoVisible = false;
+    const videoObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            isScrollVideoVisible = entry.isIntersecting;
+        });
+    }, { threshold: 0.01 });
+    videoObserver.observe(canvas);
+
     window.addEventListener('scroll', () => {
-        const rect = section.getBoundingClientRect();
-        const scrollMax = section.offsetHeight - window.innerHeight;
+        const scrollY = window.scrollY;
+        const rectTop = scrollVideoOffsetTop - scrollY;
 
         let progress;
         if (window.innerWidth <= 768) {
             // Scroll normally, map animation to intersection
             // Multiply by 1.5 for a middle-ground speed
-            progress = ((window.innerHeight - rect.top) / (window.innerHeight + rect.height)) * 1.5;
+            progress = ((window.innerHeight - rectTop) / (window.innerHeight + scrollVideoHeight)) * 1.5;
         } else {
             // Sticky logic for desktop
-            progress = -rect.top / scrollMax;
+            const scrollMax = scrollVideoHeight - window.innerHeight;
+            progress = scrollMax > 0 ? -rectTop / scrollMax : 0;
         }
         progress = Math.max(0, Math.min(1, progress));
 
@@ -736,11 +796,14 @@ if (contactBtn && contactModal && closeContactBtn) {
     }, { passive: true });
 
     function loop() {
-        // Increased lerp factor to 0.25 for snappier, faster response
+        requestAnimationFrame(loop);
+
+        // Bypass processing and rendering completely if off-screen on mobile
+        if (!isScrollVideoVisible && window.innerWidth <= 768) return;
+
         smoothedFrame += (targetFrame - smoothedFrame) * 0.25;
         const frameIndex = Math.round(smoothedFrame);
         drawFrame(Math.min(frameCount - 1, frameIndex));
-        requestAnimationFrame(loop);
     }
 
     loop();
