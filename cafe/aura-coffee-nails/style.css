@@ -233,15 +233,14 @@ body:hover .cursor-blob {
 /* Pinned Hero Section */
 #hero-spacer {
     width: 100%;
-    height: 115vh; /* Added 15vh extra to separate it from the next section */
+    height: auto; /* Removed extra scroll delay */
     position: relative;
 }
 
 .sticky-hero {
-    position: sticky;
-    top: 0;
+    position: relative; /* Changed from sticky to allow immediate native scrolling */
     width: 100%;
-    height: 100vh;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
