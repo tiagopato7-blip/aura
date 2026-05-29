@@ -379,12 +379,20 @@ if (contactBtn && contactModal && closeContactBtn) {
 
     window.scrollCallbacks.push(() => {
         let progress = 0;
-        if(wrapper) {
-            const rect = wrapper.getBoundingClientRect();
-            // Calculate progress based on the wrapper entering the bottom and leaving the top
-            const total = window.innerHeight + rect.height;
-            const scrolled = window.innerHeight - rect.top;
-            if (total > 0 && scrolled > 0) progress = scrolled / total;
+        const panel = document.querySelector('.cafe-panel');
+        if(panel) {
+            const rect = panel.getBoundingClientRect();
+            if (rect.height > window.innerHeight) {
+                // Sticky mode: calculate based on the panel scrolling past the viewport
+                const total = rect.height - window.innerHeight;
+                const scrolled = -rect.top;
+                if (total > 0) progress = scrolled / total;
+            } else {
+                // Normal mode: calculate based on panel entering from bottom to leaving top
+                const total = window.innerHeight + rect.height;
+                const scrolled = window.innerHeight - rect.top;
+                if (total > 0 && scrolled > 0) progress = scrolled / total;
+            }
         }
         
         if (isNaN(progress)) progress = 0;
