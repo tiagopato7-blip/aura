@@ -283,39 +283,35 @@ if (contactBtn && contactModal && closeContactBtn) {
     }
     
     prevBtn.addEventListener('click', () => {
-        if (window.innerWidth <= 768) {
-            // On mobile, native smooth scroll to the left
-            book.scrollBy({ left: -window.innerWidth, behavior: 'smooth' });
-        } else {
-            // On desktop, use the 3D spread logic
-            if (currentSpread > 0) {
-                currentSpread--;
-                updateMagazine();
-            }
+        if (currentSpread > 0) {
+            currentSpread--;
+            updateMagazine();
         }
     });
     
     nextBtn.addEventListener('click', () => {
-        if (window.innerWidth <= 768) {
-            // On mobile, native smooth scroll to the right
-            book.scrollBy({ left: window.innerWidth, behavior: 'smooth' });
-        } else {
-            // On desktop, use the 3D spread logic
-            if (currentSpread < maxSpreads) {
-                currentSpread++;
-                updateMagazine();
-            }
+        if (currentSpread < maxSpreads) {
+            currentSpread++;
+            updateMagazine();
         }
     });
     
     // Open cover directly on click
     const coverPage = book.querySelector('.cover-page');
-    if (coverPage) {
-        coverPage.addEventListener('click', () => {
+    const magCta = book.querySelector('.mag-cta');
+    
+    const openBook = () => {
+        if (currentSpread === 0) {
             currentSpread = 1;
             updateMagazine();
-        });
-    }
+        }
+    };
+
+    if (coverPage) coverPage.addEventListener('click', openBook);
+    if (magCta) magCta.addEventListener('click', (e) => {
+        e.stopPropagation();
+        openBook();
+    });
     
     // Reset back cover on click to return to cover
     const backPage = book.querySelector('.back-page');
