@@ -39,6 +39,7 @@ html, body {
     height: auto;
     overflow-x: hidden;
     overflow-y: auto;
+    overscroll-behavior-y: none;
 }
 
 body {
@@ -2618,11 +2619,13 @@ canvas {
         height: auto !important;
         overflow-x: hidden !important;
         overflow-y: auto !important;
+        overscroll-behavior-y: none !important;
     }
     .app-container {
         overflow-x: hidden !important;
         width: 100% !important;
         max-width: 100% !important;
+        overscroll-behavior-y: none !important;
     }
     
     /* Typography */
