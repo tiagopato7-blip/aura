@@ -38,7 +38,7 @@ body {
     color: var(--color-text-main);
     font-family: var(--font-sans);
     line-height: 1.6;
-    overflow-x: clip;
+    overflow-x: hidden;
     cursor: none;
     position: relative;
     transition: background-color 0.5s var(--bezier);
@@ -90,7 +90,7 @@ body:hover .cursor-blob {
     top: 0;
     left: 0;
     width: 100vw;
-    height: ;
+    height: 100vh;
     pointer-events: none;
     z-index: 2;
 }
@@ -233,7 +233,7 @@ body:hover .cursor-blob {
 /* Pinned Hero Section */
 #hero-spacer {
     width: 100%;
-    height: ; /* Added  extra to separate it from the next section */
+    height: 115vh; /* Added 15vh extra to separate it from the next section */
     position: relative;
 }
 
@@ -241,7 +241,7 @@ body:hover .cursor-blob {
     position: sticky;
     top: 0;
     width: 100%;
-    height: ;
+    height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -264,7 +264,7 @@ body:hover .cursor-blob {
     position: relative;
     user-select: none;
     text-align: left;
-    margin-top: -;
+    margin-top: -5vh;
 }
 
 /* THE ENLARGED FLOATING WIDGET */
@@ -380,7 +380,7 @@ canvas {
 /* HORIZONTAL SCROLL SECTION (MODULE 3) */
 #horizontal-spacer {
     width: 100%;
-    height: ; /* Increased to emphasize vertical scroll lock */
+    height: 400vh; /* Increased to emphasize vertical scroll lock */
     position: relative;
     z-index: 10;
 }
@@ -389,7 +389,7 @@ canvas {
     position: sticky;
     top: 0;
     width: 100%;
-    height: ;
+    height: 100vh;
     overflow: hidden;
     display: flex;
     align-items: center;
@@ -406,7 +406,7 @@ canvas {
 .h-panel {
     position: relative;
     width: 50vw; /* Much closer together */
-    height: ;
+    height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -624,7 +624,7 @@ canvas {
 
 /* Panels styling */
 .panel {
-    min-height: ;
+    min-height: 100vh;
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -1107,7 +1107,7 @@ canvas {
     top: 0;
     left: 0;
     width: 100vw;
-    height: ;
+    height: 100vh;
     background: rgba(0, 0, 0, 0.6);
     backdrop-filter: blur(8px);
     z-index: 10000;
@@ -1881,7 +1881,7 @@ canvas {
     top: 0;
     left: 0;
     width: 100vw;
-    height: ;
+    height: 100vh;
     background: rgba(0, 0, 0, 0.4);
     backdrop-filter: blur(15px);
     z-index: 10000;
@@ -1901,7 +1901,7 @@ canvas {
 .colors-modal-content {
     width: 90%;
     max-width: 1100px;
-    height: ;
+    height: 85vh;
     background: rgba(244, 235, 225, 0.95); /* Avela cream with transparency */
     border-radius: 40px;
     padding: 3rem;
@@ -2058,7 +2058,7 @@ canvas {
     .colors-modal-content {
         width: 95%;
         padding: 2rem;
-        height: ;
+        height: 90vh;
     }
     .colors-grid {
         grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
@@ -2089,7 +2089,7 @@ canvas {
     justify-content: center;
     gap: 1.5rem;
     height: 750px;
-    max-height: ;
+    max-height: 85vh;
     overflow: hidden;
     position: relative;
     /* Circular masking for smooth fade in all directions */
@@ -2465,7 +2465,7 @@ canvas {
 
 .overlay-dark {
     position: fixed;
-    top: 0; left: 0; width: 100vw; height: ;
+    top: 0; left: 0; width: 100vw; height: 100vh;
     background: rgba(0,0,0,0.7);
     z-index: 9998;
     opacity: 0;
@@ -2499,17 +2499,17 @@ canvas {
 .scroll-video-container {
     position: relative;
     width: 100%;
-    height: ; /* Further reduced scroll distance so it takes less space */
+    height: 150vh; /* Further reduced scroll distance so it takes less space */
     background: transparent;
-    margin-top: -; /* Recorta el espacio en blanco con la sección de arriba */
-    margin-bottom: -; /* Recorta el espacio en blanco con la sección de abajo */
+    margin-top: -20vh; /* Recorta el espacio en blanco con la sección de arriba */
+    margin-bottom: -25vh; /* Recorta el espacio en blanco con la sección de abajo */
 }
 
 .scroll-video-sticky {
     position: sticky;
     top: 0;
     width: 100%;
-    height: ; /* Forces the scroll to "lock" on the screen while the animation finishes */
+    height: 100vh; /* Forces the scroll to "lock" on the screen while the animation finishes */
     display: flex;
     justify-content: center;
     align-items: center; /* Center perfectly while the screen is locked */
@@ -2523,7 +2523,7 @@ canvas {
     bottom: 0;
     left: 0;
     width: 100%;
-    height: ; /* Increased for more blur area */
+    height: 10vh; /* Increased for more blur area */
     background: linear-gradient(to bottom, transparent, var(--color-bg));
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
@@ -2559,7 +2559,7 @@ canvas {
 /* Decorative corners for the video section */
 .scroll-video-symbol {
     position: absolute;
-    top: ;
+    top: 5vh;
     left: 4vw;
     font-size: 2rem;
     color: var(--color-white);
@@ -2571,7 +2571,7 @@ canvas {
 
 .scroll-video-logo {
     position: absolute;
-    bottom: ;
+    bottom: 4vh;
     right: 4vw;
     font-size: 2.5rem;
     font-family: var(--font-serif);
@@ -2656,11 +2656,10 @@ canvas {
 
     /* Hero Section */
     .sticky-hero {
-        padding: 1rem 1rem 4rem 1rem !important; /* Start from top to prevent logo cut-off */
+        padding: 15vh 1rem 4rem 1rem !important; /* Start from top to prevent logo cut-off */
         height: auto !important;
-        min-height: 100dvh !important; /* Forces the section to take full screen naturally */
+        min-height: calc(100vh + 80px) !important; /* Forces the next section entirely off-screen, compensating for the -60px margin-top */
         justify-content: flex-start !important; /* Prevent centering from pushing content off the top */
-        overflow: visible !important; /* PREVENT CLIP LOCK ON MOBILE */
     }
     .hero-content {
         flex-direction: column !important;
@@ -2747,8 +2746,7 @@ canvas {
     }
     .trends-container {
         padding: 0 0.5rem !important;
-        overflow-x: auto !important;
-        overflow-y: hidden !important;
+        overflow: hidden !important;
         width: 100vw !important;
     }
 
@@ -2801,7 +2799,7 @@ canvas {
         margin: -3rem auto 0 auto !important; /* Negative top margin to reduce space */
         position: relative !important; /* Removes the sticky lock */
         top: auto !important; /* Reset top since it's no longer sticky */
-        height:  !important; /* Massive height taking up most of the screen */
+        height: 75vh !important; /* Massive height taking up most of the screen */
         display: flex;
         justify-content: center;
         align-items: center;
@@ -2844,7 +2842,7 @@ canvas {
     }
     .scroll-video-sticky {
         position: relative !important;
-        height:  !important; /* Slightly smaller to fit entirely on screen */
+        height: 65vh !important; /* Slightly smaller to fit entirely on screen */
         top: auto !important;
         display: flex;
         flex-direction: column;
@@ -2888,7 +2886,7 @@ canvas {
     
     #hero-spacer {
         height: auto !important;
-        min-height: calc(100dvh + 80px) !important;
+        min-height: calc(100vh + 80px) !important;
     }
 
     #horizontal-spacer,
@@ -2906,7 +2904,7 @@ canvas {
     top: 0;
     left: 0;
     width: 100vw;
-    height: ;
+    height: 100vh;
     background: rgba(189, 181, 123, 0.95);
     backdrop-filter: blur(15px);
     -webkit-backdrop-filter: blur(15px);

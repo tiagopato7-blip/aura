@@ -46,22 +46,15 @@ let horizTarget = 0;
 let horizCurrent = 0;
 
 window.addEventListener('scroll', () => {
-    // Horizontal Scroll Section
-    // Calculate how far we are down the horizontal spacer
-    const rect = horizSpacer.getBoundingClientRect();
-    const scrollTrigger = rect.top; // When this is 0, we hit the section
-
-    // Total distance the horizontal pin stays active
-    const horizMaxScroll = horizSpacer.offsetHeight - window.innerHeight;
-
-    // Scroll distance inside the spacer
-    let horizFraction = (-scrollTrigger) / horizMaxScroll;
-
-    // Create a "dead zone" at the end. We hit 100% horizontal scroll when we are only 75% through the vertical spacer.
-    // The last 25% of the scroll distance does nothing, creating a pause before the page unsticks.
-    let mappedFraction = horizFraction / 0.75;
-
-    horizTarget = Math.max(0, Math.min(1, mappedFraction));
+    // Horizontal Scroll Section (Desktop Only)
+    if (window.innerWidth > 768) {
+        const rect = horizSpacer.getBoundingClientRect();
+        const scrollTrigger = rect.top; 
+        const horizMaxScroll = horizSpacer.offsetHeight - window.innerHeight;
+        let horizFraction = (-scrollTrigger) / horizMaxScroll;
+        let mappedFraction = horizFraction / 0.75;
+        horizTarget = Math.max(0, Math.min(1, mappedFraction));
+    }
 
     // Calculate Cafe Animation Mobile Progress here instead of in rAF
     if (window.innerWidth <= 768) {
@@ -74,21 +67,22 @@ window.addEventListener('scroll', () => {
             window.mobileCafeTargetProgress = Math.max(0, Math.min(1, (scrolled / totalScrollDistance) * 2.2));
         }
     }
-});
+}, { passive: true });
 
 // Animation Loop (Lerp)
 function animLoop() {
-    // Horizontal Smoothing
-    horizCurrent += (horizTarget - horizCurrent) * 0.2;
-
     // Only apply horizontal translation on desktop
     if (window.innerWidth > 768) {
+        // Horizontal Smoothing
+        horizCurrent += (horizTarget - horizCurrent) * 0.2;
         // Translate from 25vw to -75vw so each 50vw panel perfectly centers on the 100vw screen
         const translateValue = 25 - (horizCurrent * 100);
         horizContent.style.transform = `translateX(${translateValue}vw)`;
     } else {
-        // On mobile, CSS flex-direction: column takes over
-        horizContent.style.transform = 'none';
+        // On mobile, ensure it resets without constant applying
+        if (horizContent.style.transform !== 'none') {
+            horizContent.style.transform = 'none';
+        }
     }
 
     requestAnimationFrame(animLoop);
@@ -345,7 +339,7 @@ if (contactBtn && contactModal && closeContactBtn) {
             header.style.opacity = '1';
         }
         lastScrollY = window.scrollY;
-    });
+    }, { passive: true });
 })();
 
 
@@ -739,7 +733,7 @@ if (contactBtn && contactModal && closeContactBtn) {
         progress = Math.max(0, Math.min(1, progress));
 
         targetFrame = progress * (frameCount - 1);
-    });
+    }, { passive: true });
 
     function loop() {
         // Increased lerp factor to 0.25 for snappier, faster response
