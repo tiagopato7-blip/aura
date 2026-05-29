@@ -1,41 +1,4 @@
-// Mobile Warning Overlay Logic
-(() => {
-    const overlay = document.getElementById('mobile-warning-overlay');
-    const countdownEl = document.getElementById('warning-countdown');
-
-    if (!overlay || !countdownEl) return;
-
-    // Check if on mobile
-    if (window.innerWidth <= 768) {
-        // Block scrolling
-        document.body.style.overflow = 'hidden';
-
-        // Show overlay with slight delay for transition
-        setTimeout(() => {
-            overlay.classList.add('active');
-        }, 100);
-
-        let timeLeft = 5;
-        const timer = setInterval(() => {
-            timeLeft--;
-            countdownEl.textContent = timeLeft;
-
-            if (timeLeft <= 0) {
-                clearInterval(timer);
-                overlay.classList.remove('active');
-
-                // Unblock scrolling
-                setTimeout(() => {
-                    document.body.style.overflow = '';
-                    overlay.style.display = 'none'; // remove from flow completely
-                }, 1000); // Wait for fade out animation
-            }
-        }, 1000);
-    } else {
-        // Not mobile, remove immediately
-        overlay.style.display = 'none';
-    }
-})();
+// Mobile warning overlay completely removed to prevent scroll lock
 
 // Custom Cursor Logic
 const cursor = document.querySelector('.cursor-blob');
@@ -99,6 +62,18 @@ window.addEventListener('scroll', () => {
     let mappedFraction = horizFraction / 0.75;
 
     horizTarget = Math.max(0, Math.min(1, mappedFraction));
+
+    // Calculate Cafe Animation Mobile Progress here instead of in rAF
+    if (window.innerWidth <= 768) {
+        const panel = document.querySelector('.cafe-panel');
+        if (panel) {
+            const prect = panel.getBoundingClientRect();
+            const startOffset = window.innerHeight * 1.35;
+            const totalScrollDistance = (window.innerHeight + prect.height) - startOffset;
+            const scrolled = window.innerHeight - prect.top - startOffset;
+            window.mobileCafeTargetProgress = Math.max(0, Math.min(1, (scrolled / totalScrollDistance) * 2.2));
+        }
+    }
 });
 
 // Animation Loop (Lerp)
@@ -457,20 +432,8 @@ if (contactBtn && contactModal && closeContactBtn) {
             // Desktop: Animation linked to horizontal scroll progress
             panelProgress = Math.min(1, horizCurrent / 0.45);
         } else {
-            // Mobile: Animation linked to vertical scroll of the specific panel
-            const panel = document.querySelector('.cafe-panel');
-            if (panel) {
-                const rect = panel.getBoundingClientRect();
-                const windowHeight = window.innerHeight;
-                // Delay the start by 135% of the screen height so you have to scroll even further down for it to begin
-                const startOffset = windowHeight * 1.35;
-                const totalScrollDistance = (windowHeight + rect.height) - startOffset;
-                const scrolled = windowHeight - rect.top - startOffset;
-                // Multiply by 2.2 to make it slightly less fast
-                panelProgress = Math.max(0, Math.min(1, (scrolled / totalScrollDistance) * 2.2));
-            } else {
-                panelProgress = 0;
-            }
+            // Mobile: Use the value calculated in the scroll listener to avoid layout thrashing
+            panelProgress = window.mobileCafeTargetProgress || 0;
         }
 
         const targetFrame = panelProgress * (totalFrames - 1);
