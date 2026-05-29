@@ -376,7 +376,7 @@ if (contactBtn && contactModal && closeContactBtn) {
 
     let currentFrame = 0;
     let lastTime = 0;
-    const fps = 60;
+    const fps = 80;
     const interval = 1000 / fps;
 
     function cafeLoop(time) {
