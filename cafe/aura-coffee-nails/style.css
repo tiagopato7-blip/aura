@@ -33,12 +33,20 @@
     box-sizing: border-box;
 }
 
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: none;
+}
+
 body {
     background-color: var(--color-bg);
     color: var(--color-text-main);
     font-family: var(--font-sans);
     line-height: 1.6;
-    overflow-x: hidden;
     cursor: none;
     position: relative;
     transition: background-color 0.5s var(--bezier);
@@ -186,6 +194,7 @@ body:hover .cursor-blob {
     display: flex;
     flex-direction: column;
     z-index: 5;
+    min-height: 100dvh;
 }
 
 /* Ticker Tape / Marquee */
