@@ -2600,7 +2600,7 @@ canvas {
     }
     /* Global Resets */
     html, body {
-        overflow-x: hidden !important;
+        overflow-x: hidden;
         width: 100vw !important;
         max-width: 100% !important;
     }
@@ -2763,9 +2763,9 @@ canvas {
     }
     .cafe-panel {
         width: 100vw !important;
-        flex-direction: column !important;
-        padding: 4rem 1.5rem !important;
-        gap: 2rem !important;
+        display: block !important;
+        padding: 4rem 1.5rem 0 !important;
+        height: 150vh !important; /* Allow scroll for locked animation */
     }
     
     .content-block, .glass-card {
@@ -2783,8 +2783,14 @@ canvas {
     
     .cafe-frames-wrapper {
         width: 100% !important;
-        max-width: 320px !important;
+        max-width: 350px !important;
         margin: 0 auto !important;
+        position: sticky !important;
+        top: 25vh !important;
+        height: 50vh !important;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 
     /* Booking Section */
@@ -2828,7 +2834,7 @@ canvas {
     }
     #scroll-video-canvas {
         width: 100vw !important;
-        height: 50vh !important;
+        height: 100vh !important;
         object-fit: cover !important;
     }
     .scroll-video-symbol {
