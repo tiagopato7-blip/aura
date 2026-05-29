@@ -60,7 +60,20 @@ window.addEventListener('scroll', () => {
     // Create a "dead zone" at the end. We hit 100% horizontal scroll when we are only 75% through the vertical spacer.
     // The last 25% of the scroll distance does nothing, creating a pause before the page unsticks.
     let mappedFraction = horizFraction / 0.75;
+
     horizTarget = Math.max(0, Math.min(1, mappedFraction));
+
+    // Calculate Cafe Animation Mobile Progress here instead of in rAF
+    if (window.innerWidth <= 768) {
+        const panel = document.querySelector('.cafe-panel');
+        if (panel) {
+            const prect = panel.getBoundingClientRect();
+            const startOffset = window.innerHeight * 1.35;
+            const totalScrollDistance = (window.innerHeight + prect.height) - startOffset;
+            const scrolled = window.innerHeight - prect.top - startOffset;
+            window.mobileCafeTargetProgress = Math.max(0, Math.min(1, (scrolled / totalScrollDistance) * 2.2));
+        }
+    }
 });
 
 // Animation Loop (Lerp)
@@ -419,9 +432,8 @@ if (contactBtn && contactModal && closeContactBtn) {
             // Desktop: Animation linked to horizontal scroll progress
             panelProgress = Math.min(1, horizCurrent / 0.45);
         } else {
-            // Mobile: Completely decouple from scroll to prevent lag. Auto-play loop.
-            const now = Date.now();
-            panelProgress = (now % 6000) / 6000; // Loop every 6 seconds
+            // Mobile: Use the value calculated in the scroll listener to avoid layout thrashing
+            panelProgress = window.mobileCafeTargetProgress || 0;
         }
 
         const targetFrame = panelProgress * (totalFrames - 1);
@@ -712,20 +724,24 @@ if (contactBtn && contactModal && closeContactBtn) {
     let smoothedFrame = 0;
 
     window.addEventListener('scroll', () => {
-        if (window.innerWidth > 768) {
-            const rect = section.getBoundingClientRect();
-            const scrollMax = section.offsetHeight - window.innerHeight;
-            let progress = -rect.top / scrollMax;
-            progress = Math.max(0, Math.min(1, progress));
-            targetFrame = progress * (frameCount - 1);
+        const rect = section.getBoundingClientRect();
+        const scrollMax = section.offsetHeight - window.innerHeight;
+
+        let progress;
+        if (window.innerWidth <= 768) {
+            // Scroll normally, map animation to intersection
+            // Multiply by 1.5 for a middle-ground speed
+            progress = ((window.innerHeight - rect.top) / (window.innerHeight + rect.height)) * 1.5;
+        } else {
+            // Sticky logic for desktop
+            progress = -rect.top / scrollMax;
         }
+        progress = Math.max(0, Math.min(1, progress));
+
+        targetFrame = progress * (frameCount - 1);
     });
 
     function loop() {
-        if (window.innerWidth <= 768) {
-            const progress = (Date.now() % 5000) / 5000;
-            targetFrame = progress * (frameCount - 1);
-        }
         // Increased lerp factor to 0.25 for snappier, faster response
         smoothedFrame += (targetFrame - smoothedFrame) * 0.25;
         const frameIndex = Math.round(smoothedFrame);

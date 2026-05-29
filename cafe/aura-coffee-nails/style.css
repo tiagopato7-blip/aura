@@ -65,24 +65,23 @@ h3,
     display: none;
 }
 
-/* Custom Cursor - Restricted to desktop to prevent mobile touch interception bugs */
-@media (hover: hover) and (pointer: fine) {
-    .cursor-blob {
-        width: 20px;
-        height: 20px;
-        background-color: var(--color-matcha-light);
-        border-radius: 50%;
-        position: fixed;
-        pointer-events: none;
-        z-index: 99999; /* Higher than all modals */
-        mix-blend-mode: multiply;
-        transition: width 0.3s var(--bezier), height 0.3s var(--bezier), background-color 0.3s var(--bezier);
-        transform: translate(-50%, -50%);
-    }
+/* Custom Cursor */
+.cursor-blob {
+    width: 20px;
+    height: 20px;
+    background-color: var(--color-matcha-light);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 99999; /* Higher than all modals */
+    mix-blend-mode: multiply;
+    /* Looks amazing on green! */
+    transition: width 0.3s var(--bezier), height 0.3s var(--bezier), background-color 0.3s var(--bezier);
+    transform: translate(-50%, -50%);
+}
 
-    body:hover .cursor-blob {
-        opacity: 1;
-    }
+body:hover .cursor-blob {
+    opacity: 1;
 }
 
 /* Aura Sparkles (Option 4) */
@@ -91,7 +90,7 @@ h3,
     top: 0;
     left: 0;
     width: 100vw;
-    height: 100vh;
+    height: ;
     pointer-events: none;
     z-index: 2;
 }
@@ -234,7 +233,7 @@ h3,
 /* Pinned Hero Section */
 #hero-spacer {
     width: 100%;
-    height: 115vh; /* Added 15vh extra to separate it from the next section */
+    height: ; /* Added  extra to separate it from the next section */
     position: relative;
 }
 
@@ -242,7 +241,7 @@ h3,
     position: sticky;
     top: 0;
     width: 100%;
-    height: 100vh;
+    height: ;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -265,7 +264,7 @@ h3,
     position: relative;
     user-select: none;
     text-align: left;
-    margin-top: -5vh;
+    margin-top: -;
 }
 
 /* THE ENLARGED FLOATING WIDGET */
@@ -307,7 +306,6 @@ canvas {
     width: 100%;
     height: auto;
     display: block;
-    pointer-events: none; /* Prevents video from stealing touch events on mobile */
 }
 
 /* Typography & Details (Hero) */
@@ -382,7 +380,7 @@ canvas {
 /* HORIZONTAL SCROLL SECTION (MODULE 3) */
 #horizontal-spacer {
     width: 100%;
-    height: 400vh; /* Increased to emphasize vertical scroll lock */
+    height: ; /* Increased to emphasize vertical scroll lock */
     position: relative;
     z-index: 10;
 }
@@ -391,7 +389,7 @@ canvas {
     position: sticky;
     top: 0;
     width: 100%;
-    height: 100vh;
+    height: ;
     overflow: hidden;
     display: flex;
     align-items: center;
@@ -408,7 +406,7 @@ canvas {
 .h-panel {
     position: relative;
     width: 50vw; /* Much closer together */
-    height: 100vh;
+    height: ;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -626,7 +624,7 @@ canvas {
 
 /* Panels styling */
 .panel {
-    min-height: 100vh;
+    min-height: ;
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -1109,7 +1107,7 @@ canvas {
     top: 0;
     left: 0;
     width: 100vw;
-    height: 100vh;
+    height: ;
     background: rgba(0, 0, 0, 0.6);
     backdrop-filter: blur(8px);
     z-index: 10000;
@@ -1883,7 +1881,7 @@ canvas {
     top: 0;
     left: 0;
     width: 100vw;
-    height: 100vh;
+    height: ;
     background: rgba(0, 0, 0, 0.4);
     backdrop-filter: blur(15px);
     z-index: 10000;
@@ -1903,7 +1901,7 @@ canvas {
 .colors-modal-content {
     width: 90%;
     max-width: 1100px;
-    height: 85vh;
+    height: ;
     background: rgba(244, 235, 225, 0.95); /* Avela cream with transparency */
     border-radius: 40px;
     padding: 3rem;
@@ -2060,7 +2058,7 @@ canvas {
     .colors-modal-content {
         width: 95%;
         padding: 2rem;
-        height: 90vh;
+        height: ;
     }
     .colors-grid {
         grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
@@ -2091,7 +2089,7 @@ canvas {
     justify-content: center;
     gap: 1.5rem;
     height: 750px;
-    max-height: 85vh;
+    max-height: ;
     overflow: hidden;
     position: relative;
     /* Circular masking for smooth fade in all directions */
@@ -2467,7 +2465,7 @@ canvas {
 
 .overlay-dark {
     position: fixed;
-    top: 0; left: 0; width: 100vw; height: 100vh;
+    top: 0; left: 0; width: 100vw; height: ;
     background: rgba(0,0,0,0.7);
     z-index: 9998;
     opacity: 0;
@@ -2501,17 +2499,17 @@ canvas {
 .scroll-video-container {
     position: relative;
     width: 100%;
-    height: 150vh; /* Further reduced scroll distance so it takes less space */
+    height: ; /* Further reduced scroll distance so it takes less space */
     background: transparent;
-    margin-top: -20vh; /* Recorta el espacio en blanco con la sección de arriba */
-    margin-bottom: -25vh; /* Recorta el espacio en blanco con la sección de abajo */
+    margin-top: -; /* Recorta el espacio en blanco con la sección de arriba */
+    margin-bottom: -; /* Recorta el espacio en blanco con la sección de abajo */
 }
 
 .scroll-video-sticky {
     position: sticky;
     top: 0;
     width: 100%;
-    height: 100vh; /* Forces the scroll to "lock" on the screen while the animation finishes */
+    height: ; /* Forces the scroll to "lock" on the screen while the animation finishes */
     display: flex;
     justify-content: center;
     align-items: center; /* Center perfectly while the screen is locked */
@@ -2525,7 +2523,7 @@ canvas {
     bottom: 0;
     left: 0;
     width: 100%;
-    height: 10vh; /* Increased for more blur area */
+    height: ; /* Increased for more blur area */
     background: linear-gradient(to bottom, transparent, var(--color-bg));
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
@@ -2561,7 +2559,7 @@ canvas {
 /* Decorative corners for the video section */
 .scroll-video-symbol {
     position: absolute;
-    top: 5vh;
+    top: ;
     left: 4vw;
     font-size: 2rem;
     color: var(--color-white);
@@ -2573,7 +2571,7 @@ canvas {
 
 .scroll-video-logo {
     position: absolute;
-    bottom: 4vh;
+    bottom: ;
     right: 4vw;
     font-size: 2.5rem;
     font-family: var(--font-serif);
@@ -2658,10 +2656,11 @@ canvas {
 
     /* Hero Section */
     .sticky-hero {
-        padding: 15vh 1rem 4rem 1rem !important; /* Start from top to prevent logo cut-off */
+        padding: 1rem 1rem 4rem 1rem !important; /* Start from top to prevent logo cut-off */
         height: auto !important;
-        min-height: calc(100vh + 80px) !important; /* Forces the next section entirely off-screen, compensating for the -60px margin-top */
+        min-height: 100dvh !important; /* Forces the section to take full screen naturally */
         justify-content: flex-start !important; /* Prevent centering from pushing content off the top */
+        overflow: visible !important; /* PREVENT CLIP LOCK ON MOBILE */
     }
     .hero-content {
         flex-direction: column !important;
@@ -2748,7 +2747,8 @@ canvas {
     }
     .trends-container {
         padding: 0 0.5rem !important;
-        overflow: hidden !important;
+        overflow-x: auto !important;
+        overflow-y: hidden !important;
         width: 100vw !important;
     }
 
@@ -2801,7 +2801,7 @@ canvas {
         margin: -3rem auto 0 auto !important; /* Negative top margin to reduce space */
         position: relative !important; /* Removes the sticky lock */
         top: auto !important; /* Reset top since it's no longer sticky */
-        height: 75vh !important; /* Massive height taking up most of the screen */
+        height:  !important; /* Massive height taking up most of the screen */
         display: flex;
         justify-content: center;
         align-items: center;
@@ -2844,7 +2844,7 @@ canvas {
     }
     .scroll-video-sticky {
         position: relative !important;
-        height: 65vh !important; /* Slightly smaller to fit entirely on screen */
+        height:  !important; /* Slightly smaller to fit entirely on screen */
         top: auto !important;
         display: flex;
         flex-direction: column;
@@ -2884,21 +2884,19 @@ canvas {
         position: relative !important;
         top: auto !important;
         bottom: auto !important;
-        height: auto !important;
-        min-height: 100vh !important;
-        overflow: visible !important;
-        transform: none !important;
     }
     
-    #hero-spacer,
+    #hero-spacer {
+        height: auto !important;
+        min-height: calc(100dvh + 80px) !important;
+    }
+
     #horizontal-spacer,
     .scroll-video-container,
     .cafe-panel,
-    #interactive-nails,
-    #scroll-video-section {
+    #interactive-nails {
         height: auto !important;
         min-height: 0 !important;
-        overflow: visible !important;
     }
 }
 
@@ -2908,7 +2906,7 @@ canvas {
     top: 0;
     left: 0;
     width: 100vw;
-    height: 100vh;
+    height: ;
     background: rgba(189, 181, 123, 0.95);
     backdrop-filter: blur(15px);
     -webkit-backdrop-filter: blur(15px);
