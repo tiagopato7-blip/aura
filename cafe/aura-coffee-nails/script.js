@@ -406,14 +406,15 @@ if (contactBtn && contactModal && closeContactBtn) {
 
 
 // Scroll-Driven Café Frame Animation
-// Reads horizCurrent (defined above in the same scope) to sync frames with horizontal scroll
 (() => {
     const canvas = document.getElementById('cafe-frames-canvas');
     const loadingEl = document.getElementById('cafe-loading');
-    if (!canvas) return;
+    const panel = document.querySelector('.cafe-panel');
+    const spacer = document.getElementById('horizontal-spacer');
+    if (!canvas || !spacer) return;
 
     const ctx = canvas.getContext('2d');
-    const totalFrames = 183; // 210 - 28 + 1
+    const totalFrames = 183; 
     const frames = [];
     let loadedCount = 0;
     let lastFrameIndex = -1;
@@ -433,7 +434,6 @@ if (contactBtn && contactModal && closeContactBtn) {
         lastFrameIndex = -1;
     });
 
-    // Preload all 183 frames from 987 folder (from 028 to 210)
     for (let i = 0; i < totalFrames; i++) {
         const img = new Image();
         const frameNum = i + 28;
@@ -464,8 +464,6 @@ if (contactBtn && contactModal && closeContactBtn) {
 
         const cw = canvas.width;
         const ch = canvas.height;
-
-        // Contain-fit: scale to fit entirely within canvas without cropping
         const scale = Math.min(cw / img.naturalWidth, ch / img.naturalHeight);
         const w = img.naturalWidth * scale;
         const h = img.naturalHeight * scale;
@@ -476,41 +474,34 @@ if (contactBtn && contactModal && closeContactBtn) {
         ctx.drawImage(img, x, y, w, h);
     }
 
-    // horizCurrent is the smoothed scroll progress (0→1) over the full horizontal section.
-    // Panel 1 (café) is visible from 0 to ~0.45. Map that range to frames 0→totalFrames.
-    // Use a smoothed frame value (lerp) to ensure buttery-fluid playback.
+    let targetFrame = 0;
     let smoothedFrame = 0;
 
-    // IntersectionObserver to avoid rendering canvas frames when off-screen on mobile
-    let isCafeVisible = false;
-    const cafeObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            isCafeVisible = entry.isIntersecting;
-        });
-    }, { threshold: 0.01 });
-    cafeObserver.observe(canvas);
+    window.scrollCallbacks.push(() => {
+        let progress = 0;
+        if (window.innerWidth <= 768) {
+            if(panel) {
+                const rect = panel.getBoundingClientRect();
+                const scrolled = window.innerHeight - rect.top;
+                const total = window.innerHeight + rect.height;
+                if (scrolled > 0) progress = scrolled / total;
+            }
+        } else {
+            const rect = spacer.getBoundingClientRect();
+            const scrollMax = rect.height - window.innerHeight;
+            if (scrollMax > 0) progress = -rect.top / scrollMax;
+            
+            // Map the first 33% of spacer scroll to 100% of frames so it plays while panel is visible
+            progress = progress * 2.5; 
+        }
+        
+        progress = Math.max(0, Math.min(1, progress));
+        targetFrame = progress * (totalFrames - 1);
+    });
 
     function cafeLoop() {
         requestAnimationFrame(cafeLoop);
-
-        // Bypass processing and rendering completely if off-screen on mobile
-        if (!isCafeVisible && window.innerWidth <= 768) return;
-
-        let panelProgress;
-
-        if (window.innerWidth > 768) {
-            // Desktop: Animation linked to horizontal scroll progress
-            panelProgress = Math.min(1, horizCurrent / 0.45);
-        } else {
-            // Mobile: Use the value calculated in the scroll listener to avoid layout thrashing
-            panelProgress = window.mobileCafeTargetProgress || 0;
-        }
-
-        const targetFrame = panelProgress * (totalFrames - 1);
-
-        // Lerp toward the target frame — increased to 0.25 for much faster, snappier response
         smoothedFrame += (targetFrame - smoothedFrame) * 0.25;
-
         const frameIndex = Math.min(totalFrames - 1, Math.max(0, Math.round(smoothedFrame)));
         drawFrame(frameIndex);
     }
@@ -746,10 +737,9 @@ if (contactBtn && contactModal && closeContactBtn) {
     window.addEventListener('resize', () => {
         canvasReady = false;
         initCanvas();
-        currentFrameIndex = -1; // Force redraw
+        currentFrameIndex = -1; 
     });
 
-    // Preload frames
     for (let i = 1; i <= frameCount; i++) {
         const img = new Image();
         const num = String(i).padStart(3, '0');
@@ -775,13 +765,9 @@ if (contactBtn && contactModal && closeContactBtn) {
 
         const cw = canvas.width;
         const ch = canvas.height;
-
-        // Contain-fit to avoid zooming and cropping
         const scale = Math.min(cw / img.naturalWidth, ch / img.naturalHeight);
         const w = img.naturalWidth * scale;
         const h = img.naturalHeight * scale;
-
-        // Center perfectly
         const x = (cw - w) / 2;
         const y = (ch - h) / 2;
 
@@ -792,42 +778,28 @@ if (contactBtn && contactModal && closeContactBtn) {
     let targetFrame = 0;
     let smoothedFrame = 0;
 
-    // IntersectionObserver to avoid rendering canvas frames when off-screen on mobile
-    let isScrollVideoVisible = false;
-    const videoObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            isScrollVideoVisible = entry.isIntersecting;
-        });
-    }, { threshold: 0.01 });
-    videoObserver.observe(canvas);
-
-    window.scrollCallbacks.push((scrollY) => {
-        const rectTop = scrollVideoOffsetTop - scrollY;
-
-        let progress;
+    window.scrollCallbacks.push(() => {
+        const rect = section.getBoundingClientRect();
+        let progress = 0;
+        
         if (window.innerWidth <= 768) {
-            // Scroll normally, map animation to intersection
-            // Multiply by 1.5 for a middle-ground speed
-            progress = ((window.innerHeight - rectTop) / (window.innerHeight + scrollVideoHeight)) * 1.5;
+            const scrolled = window.innerHeight - rect.top;
+            const total = window.innerHeight + rect.height;
+            if(scrolled > 0) progress = scrolled / total;
         } else {
-            // Sticky logic for desktop
-            const scrollMax = scrollVideoHeight - window.innerHeight;
-            progress = scrollMax > 0 ? -rectTop / scrollMax : 0;
+            const scrollMax = rect.height - window.innerHeight;
+            if(scrollMax > 0) progress = -rect.top / scrollMax;
         }
+        
         progress = Math.max(0, Math.min(1, progress));
-
         targetFrame = progress * (frameCount - 1);
     });
 
     function loop() {
         requestAnimationFrame(loop);
-
-        // Bypass processing and rendering completely if off-screen on mobile
-        if (!isScrollVideoVisible && window.innerWidth <= 768) return;
-
         smoothedFrame += (targetFrame - smoothedFrame) * 0.25;
         const frameIndex = Math.round(smoothedFrame);
-        drawFrame(Math.min(frameCount - 1, frameIndex));
+        drawFrame(Math.min(frameCount - 1, Math.max(0, frameIndex)));
     }
 
     loop();
