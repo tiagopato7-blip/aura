@@ -425,8 +425,7 @@ if (contactBtn && contactModal && closeContactBtn) {
                 // Progress from 0 (enters bottom of screen) to 1 (leaves top)
                 const totalScrollDistance = windowHeight + rect.height;
                 const scrolled = windowHeight - rect.top;
-                // Adding a multiplier (like 1.5) to make it finish playing earlier so it's fully poured while readable
-                panelProgress = Math.max(0, Math.min(1, (scrolled / totalScrollDistance) * 1.5));
+                panelProgress = Math.max(0, Math.min(1, (scrolled / totalScrollDistance) * 1.1));
             } else {
                 panelProgress = 0;
             }
@@ -434,8 +433,8 @@ if (contactBtn && contactModal && closeContactBtn) {
         
         const targetFrame = panelProgress * (totalFrames - 1);
         
-        // Lerp toward the target frame — 0.12 gives a silky smooth follow
-        smoothedFrame += (targetFrame - smoothedFrame) * 0.12;
+        // Lerp toward the target frame — 0.05 gives a buttery smooth follow on mobile
+        smoothedFrame += (targetFrame - smoothedFrame) * 0.05;
         
         const frameIndex = Math.min(totalFrames - 1, Math.max(0, Math.round(smoothedFrame)));
         drawFrame(frameIndex);
@@ -731,7 +730,7 @@ if (contactBtn && contactModal && closeContactBtn) {
     });
 
     function loop() {
-        smoothedFrame += (targetFrame - smoothedFrame) * 0.1;
+        smoothedFrame += (targetFrame - smoothedFrame) * 0.05;
         const frameIndex = Math.round(smoothedFrame);
         drawFrame(Math.min(frameCount - 1, frameIndex));
         requestAnimationFrame(loop);

@@ -2587,6 +2587,17 @@ canvas {
    AURA MOBILE OPTIMIZATION (PREMIUM RESPONSIVE)
    ========================================================================== */
 @media (max-width: 768px) {
+    /* Smooth Reveal Overrides for Mobile */
+    .reveal {
+        transform: translateY(30px);
+    }
+    .reveal-grand {
+        transform: translateY(40px) scale(0.98);
+        border-radius: 40px !important;
+    }
+    .reveal-item {
+        transform: translateY(20px);
+    }
     /* Global Resets */
     html, body {
         overflow-x: hidden !important;
@@ -2803,13 +2814,17 @@ canvas {
     
     /* Scroll Video Section */
     .scroll-video-container {
-        height: auto !important; /* Stop pinning on mobile */
-        padding: 4rem 0 !important;
+        height: 200vh !important; /* Allow scroll space to scrub animation */
+        padding: 0 !important;
     }
     .scroll-video-sticky {
-        position: relative !important;
-        height: auto !important;
+        position: sticky !important;
+        height: 100vh !important;
         top: 0 !important;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
     }
     #scroll-video-canvas {
         width: 100vw !important;
