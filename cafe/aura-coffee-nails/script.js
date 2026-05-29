@@ -600,3 +600,76 @@ if (contactBtn && contactModal && closeContactBtn) {
         });
     }
 })();
+
+// Auto-Looping Girl Video (Folder 123)
+(() => {
+    const canvas = document.getElementById('girl-video-canvas');
+    const wrapper = document.querySelector('.girl-video-wrapper');
+    if (!canvas || !wrapper) return;
+
+    const ctx = canvas.getContext('2d');
+    const totalFrames = 240; 
+    const frames = [];
+    let loadedCount = 0;
+    let lastFrameIndex = -1;
+
+    for (let i = 1; i <= totalFrames; i++) {
+        const img = new Image();
+        const num = String(i).padStart(3, '0');
+        img.src = `123/ezgif-frame-${num}.jpg`;
+        img.onload = () => {
+            loadedCount++;
+            if (loadedCount === 1) drawFrame(0);
+        };
+        frames.push(img);
+    }
+
+    function drawFrame(index) {
+        const cw = canvas.offsetWidth || 800;
+        const ch = canvas.offsetHeight || 600;
+        
+        if (canvas.width !== cw || canvas.height !== ch) {
+            canvas.width = cw;
+            canvas.height = ch;
+            lastFrameIndex = -1;
+        }
+
+        if (index === lastFrameIndex) return;
+
+        const img = frames[index];
+        if (!img || !img.complete || !img.naturalWidth) return;
+
+        lastFrameIndex = index;
+
+        const scale = Math.max(cw / img.naturalWidth, ch / img.naturalHeight);
+        const w = img.naturalWidth * scale;
+        const h = img.naturalHeight * scale;
+        const x = (cw - w) / 2;
+        const y = (ch - h) / 2;
+
+        ctx.clearRect(0, 0, cw, ch);
+        ctx.drawImage(img, x, y, w, h);
+    }
+
+    let currentFrame = 0;
+    let lastTime = 0;
+    const fps = 30;
+    const interval = 1000 / fps;
+
+    function loop(time) {
+        requestAnimationFrame(loop);
+        
+        if(wrapper) {
+            const rect = wrapper.getBoundingClientRect();
+            if(rect.bottom < 0 || rect.top > window.innerHeight) return;
+        }
+
+        if (time - lastTime >= interval) {
+            lastTime = time;
+            currentFrame = (currentFrame + 1) % totalFrames;
+            drawFrame(currentFrame);
+        }
+    }
+
+    requestAnimationFrame(loop);
+})();
